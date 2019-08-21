@@ -27,7 +27,11 @@ router.delete('/flat/:flatId', async (req, res) => {
 });
 
 router.put('/flat/:flatId', async (req, res) => {
-  res.send(`Welcome to the Admin API. Match to controllers/admin/flat/update for flat ${req.params.flatId}`);
+  const message = await req.context.models.Flat.update(
+    { name: req.body.name, paymentDetails: req.body.paymentDetails },
+    {returning: true, where: {id: req.params.flatId} }
+  );
+  return res.send(message);
 });
 
 module.exports = router;
