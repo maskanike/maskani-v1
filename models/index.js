@@ -5,9 +5,14 @@ import Sequelize from 'sequelize';
 const sequelize = new Sequelize( process.env.DATABASE_URL );
 
 const models = {
-  User: sequelize.import('./user'),
-  Flat: sequelize.import('./flat'),
-  Unit: sequelize.import('./unit'),
+  User:         sequelize.import('./user'),
+  Flat:         sequelize.import('./flat'),
+  Unit:         sequelize.import('./unit'),
+  Tenant:       sequelize.import('./tenant'),
+  Invoice:      sequelize.import('./invoice'),
+  Receipt:      sequelize.import('./receipt'),
+  Statement:    sequelize.import('./statement'),
+  Notification: sequelize.import('./notification'),
 };
 
 Object.keys(models).forEach(key => {
