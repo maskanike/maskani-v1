@@ -31,7 +31,7 @@ router.delete('/flat/:flatId', async (req, res) => {
 router.put('/flat/:flatId', async (req, res) => {
   const message = await req.context.models.Flat.update(
     { name: req.body.name, paymentDetails: req.body.paymentDetails },
-    {returning: true, where: {id: req.params.flatId} }
+    { returning: true, where:{ id: req.params.flatId }}
   );
   return res.send(message);
 });
@@ -40,7 +40,7 @@ router.put('/flat/:flatId', async (req, res) => {
 // Units CRUD REST API
 
 router.get('/unit', async (req, res) => {
-  // User has to be authenticated to check their units. API key for now.
+  // User has to be authenticated to check their units.
   const flatId = req.query.flatId;
   if (!flatId) {
     return res.send('Flat not specified. Add ?flatId=')
@@ -69,7 +69,7 @@ router.delete('/unit/:unitId', async (req, res) => {
 router.put('/unit/:unitId', async (req, res) => {
   const message = await req.context.models.Unit.update(
     { name: req.body.name, status: req.body.status },
-    {returning: true, where: {id: req.params.unitId} }
+    { returning: true, where:{ id: req.params.unitId }}
   );
   return res.send(message);
 });
