@@ -12,7 +12,7 @@ const tenantRouter = require('./routes/tenant_management');
 
 import models, { sequelize, createLandlordWithFlat } from './models';
 
-const eraseDatabaseOnSync = true;
+const eraseDatabaseOnSync = process.env.NODE_ENV === 'test'?true:false;
 
 const app = express();
 
