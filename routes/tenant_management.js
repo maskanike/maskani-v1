@@ -15,14 +15,18 @@ router.get('/', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
+  console.log('post data:', req.body);
   const message = await req.context.models.Tenant.create({
     rent: req.body.rent,
     deposit: req.body.deposit,
     balance: req.body.balance,
-    flatId: req.body.flatId,
-    userId: req.body.userId,
-    unitId: req.body.unitId,
+  }).then(tenant => {
+    // This is a stupid way to set foreign keys. Get rid of this ORM as soon as possible.
+    tenant.setUser(req.body.userId);
+    tenant.setUnit(req.body.unitId);
+    tenant.setFlat(req.body.flatId);
   });
+  
   return res.send(message);
 });
 
