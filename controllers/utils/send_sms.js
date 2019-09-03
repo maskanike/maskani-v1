@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 
-const config = require(`../../config/${process.env.NODE_ENV}`); //TODO Find a better way to do this variable import
+const config = require(`../../config/${process.env.NODE_ENV}`); // TODO Find a better way to do this variable import
 
 async function sendSMS(req, msisdn, message) {
   const messagePayload = `to=${msisdn}&message=${encodeURIComponent(message)}&username=${config.at_username}`;
