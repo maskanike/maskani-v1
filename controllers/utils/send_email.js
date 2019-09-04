@@ -1,17 +1,16 @@
-const rp = require('request-promise');
+var Mailgun = require('mailgun-js');
 
 const config = require(`../../config/${process.env.NODE_ENV}`); // TODO Find a better way to do this variable import
 
 async function sendEmail(req, from, to, subject, html) {
-  var mailgun = new Mailgun({apiKey: config.mailgun_api_key, domain: config.mailgun_domain});
+  var mailgun = new Mailgun({ apiKey:config.mailgun_apikey, domain:config.mailgun_domain });
   var data = {
     from,
     to,
     subject,
     html,
   }
-  mailgun.messages().send(data, function (err, body) {
-      //If there is an error, render the error page
+  mailgun.messages().send(data, async function (err, body) {
       if (err) {
         await req.context.models.Notification.create({
           message: html,

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+import sendEmail from '../controllers/utils/send_email';
 import sendSMS from '../controllers/utils/send_sms';
 
 router.get('/', function (req, res, next) {
@@ -27,7 +28,12 @@ router.post('/invoice', async (req, res) => {
     const message = `Your bill for the month Feb is 10 bob`
     const tenant = await req.context.models.Tenant.findByPk(tenantId);
     const user = await tenant.getUser()
+    const flat = await tenant.getFlat()
+    
+    const flatUser = await req.context.models.User.findByPk(flat.userId);
+    console.log('flat user:', flatUser);
 
+    await sendEmail(req, flatUser.email, user.email, 'Your Invoice this Month | Maskani', message)
     await sendSMS(req, user.msisdn, message)
 
     return res.send(invoice);
