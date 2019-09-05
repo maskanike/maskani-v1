@@ -2,7 +2,8 @@
 require('dotenv').config();
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize( process.env.DATABASE_URL );
+const databaseUrl = process.env.DATABASE_URL || '' // TODO add a default localhost database URL for test env.
+const sequelize = new Sequelize(databaseUrl);
 
 const models = {
   User:         sequelize.import('./user'),
