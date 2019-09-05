@@ -1,9 +1,15 @@
 var Mailgun = require('mailgun-js');
 
-const config = require(`../../config/${process.env.NODE_ENV}`); // TODO Find a better way to do this variable import
+const MAILGUN_APIKEY = process.env.MAILGUN_APIKEY;
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
 
 async function sendEmail(req, from, to, subject, html) {
-  var mailgun = new Mailgun({ apiKey:config.mailgun_apikey, domain:config.mailgun_domain });
+  if (!MAILGUN_APIKEY || !MAILGUN_DOMAIN){
+    console.log('MAILGUN APIKEY or DOMAIN missing from env variables. Please add them');
+    return;
+  }
+
+  var mailgun = new Mailgun({ apiKey:MAILGUN_APIKEY, domain:MAILGUN_DOMAIN });
   var data = {
     from,
     to,

@@ -1,23 +1,28 @@
 const rp = require('request-promise');
 
-const config = require(`../../config/${process.env.NODE_ENV}`); // TODO Find a better way to do this variable import
+const AT_USERNAME = process.env.AT_USERNAME;
+const AT_APIKEY = process.env.AT_APIKEY;
 
 async function sendSMS(req, msisdn, message) {
-  const messagePayload = `to=${msisdn}&message=${encodeURIComponent(message)}&username=${config.at_username}`;
+  if (!AT_APIKEY || !AT_USERNAME){
+    console.log('Africastaking APIKEY or USERNAME missing from env variables. Please add them');
+    return;
+  }
+  const messagePayload = `to=${msisdn}&message=${encodeURIComponent(message)}&username=${AT_USERNAME}`;
 
   const options = {
-    url: config.at_url,
+    url: "https://api.africastalking.com/version1/messaging",
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'apikey': `${config.at_apikey}`,
+      'apikey': AT_APIKEY,
       'Accept': 'application/json',
     },
     body: messagePayload,
   };
 
   if (process.env.NODE_ENV === 'test') {
-    return true
+    return
   }
 
   try {
@@ -28,7 +33,6 @@ async function sendSMS(req, msisdn, message) {
       type: 'sms',
       status: 'success',
     });
-    return true
 
   } catch (e) {
     await req.context.models.Notification.create({

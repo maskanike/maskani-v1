@@ -31,7 +31,6 @@ router.post('/invoice', async (req, res) => {
     const flat = await tenant.getFlat()
     
     const flatUser = await req.context.models.User.findByPk(flat.userId);
-    console.log('flat user:', flatUser);
 
     await sendEmail(req, flatUser.email, user.email, 'Your Invoice this Month | Maskani', message)
     await sendSMS(req, user.msisdn, message)
