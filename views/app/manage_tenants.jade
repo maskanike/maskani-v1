@@ -1,0 +1,312 @@
+extends ../app/layout_app
+
+block vars
+  - var bodyClass = 'dashboard manage-tenants-index';
+  //- - var activeClass = 'active';
+
+block appSidebar
+  // p Manage Tenants
+
+block appMain
+  h1.main_title Manage Tenants
+  ul.list-inline.dropA
+
+    //li.list-inline-item
+      .dropdown
+        button(class="btn btn-light dropdown-toggle", type="button" id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false" ) 2019
+        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")
+          a(class="dropdown-item", href="#nogo") 2018
+          a(class="dropdown-item", href="#nogo") 2017
+          a(class="dropdown-item", href="#nogo") 2016
+
+    //li.list-inline-item
+      .dropdown
+        button(class="btn btn-light dropdown-toggle", type="button" id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false" ) September
+        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")
+          a(class="dropdown-item", href="#nogo") August
+          a(class="dropdown-item", href="#nogo") July
+          a(class="dropdown-item", href="#nogo") June
+          a(class="dropdown-item", href="#nogo") May
+
+    li.list-inline-item.propertyDrop
+      .dropdown
+        button(class="btn btn-light dropdown-toggle", type="button" id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false" ) Hurlingham B Flats
+        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")
+          a(class="dropdown-item", href="#nogo") + Add Another Property
+
+    li.list-inline-item.normalButton.far-right
+        button(class="btn btn-primary", type="button", data-toggle='modal', data-target='#uNewTenant' ) + Add Tenant
+
+  .main_head
+    ul.nav.nav-tabs
+      li.nav-item.active
+        a.nav-link.active(href='#nogo') All Current Tenants
+      |       
+      li.nav-item
+        a.nav-link(href='#nogo') Former Tenants
+
+  .main_in 
+    table.table.table-hover.t-1
+      thead
+        tr
+          th(scope='col', class='tSelect') 
+          th(scope='col', class='tUnit') Unit
+          th(scope='col', class='tName') Name
+          th(scope='col', class='tJoined') Joined
+          th(scope='col', class='tContacts') Contacts
+          th(scope='col', class='tRent') Rent
+          th(scope='col', class='tOther') Other Expenses
+          th(scope='col', class='t') Action          
+      tbody
+        tr.table-side-occupied
+          td -
+          th(scope='row') B1
+          td Faith Secondname        
+          td June 2019        
+          td 
+            p
+              span Tel: 
+              | 0720000000
+            p 
+              span Email: 
+              | faith@example.com
+          td KES 7,000     
+          td 
+            p Garbage: KES 150
+            p Water: KES 100
+          td 
+            button(class='btn btn-block btn-link text-left', data-toggle='modal', data-target='#uTenant') Edit                          
+
+        tr.table-side-unoccupied
+          td -
+          th(scope='row') B2
+          td(colspan='5') Unoccupied
+          td(scope='row')
+            button(class='btn btn-block btn-link text-left', data-toggle='modal', data-target='#uNewTenant') Add Tenant
+        tr.table-side-occupied
+          td -
+          th(scope='row') B3
+          td Kibali Kimemia
+          td February 2019
+          td <p>0720000000</p><p>kibali@example.com</p>
+          td KES 5,000
+          td <p>Garbage: KES 150</p><p>Water: KES 100</p>
+          td 
+            button(class='btn btn-block btn-link text-left') Edit
+        tr.table-side-occupied
+          td -
+          th(scope='row') B4
+          td Saudi Kefa Nduva
+          td December 2018
+          td <p>0720000000</p><p>kefa@example.com</p>
+          td KES 5,000
+          td <p>Garbage: KES 150</p><p>Water: KES 100</p>
+          td 
+            button(class='btn btn-block btn-link text-left') Edit
+        tr.table-side-occupied
+          td -
+          th(scope='row') B5
+          td Judith
+          td October 2018
+          td <p>0720000000</p><p>judith@example.com</p>
+          td KES 5,000
+          td <p>Garbage: KES 150</p><p>Water: KES 100</p>
+          td 
+            button(class='btn btn-block btn-link text-left') Edit         
+
+    //figure.mainActions.text-center.p-5
+      button.btn.btn-success.btn-lg(type='button') Send September Invoices
+      br
+      
+    .modalGroup
+      #uTenant.modal(data-backdrop="static" data-keyboard="false")
+        .modal-dialog
+        .modal-dialog
+          .modal-content
+            // Modal Header
+            .modal-header
+              h4.modal-title Edit Tenant Details
+              |         
+              button.close(type='button', data-dismiss='modal') &times;
+            // Modal body
+            .modal-body
+
+              .formWrapper
+                form.formB
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputName') Full Name
+                      |       
+                      input#inputName.form-control(type='text', placeholder='Full Name')
+                    |     
+                    .form-group.col-md-6
+                      label(for='inputEmail') Email Address
+                      |       
+                      input#inputEmail4.form-control(type='email', placeholder='Email Address')
+                  |   
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputName') Phone Number
+                      |       
+                      input#inputName.form-control(type='text', placeholder='Phone Number')
+                    |     
+                    .form-group.col-md-6
+                      label(for='inputDate') Date Joined
+                      |       
+                      input#inputDate.form-control(type='text', placeholder='5 August, 2019', readonly)
+
+                  p
+                    strong Financials
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputRent') Rent
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')                  
+                    .form-group.col-md-6                      
+                      label(for='inputRent') Garbage
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')
+                    
+                    .form-group.col-md-6
+                      label(for='inputRent') Water
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')
+
+                    .form-group.col-md-6 
+                      label(for='inputRent') Expense Name
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')  
+                  
+                  p
+                    strong Status    
+
+                  .form-row    
+                    .form-group.col-md-6 
+                      label(for='inputState') Tenancy Status
+                      select#inputState.form-control
+                        option(selected='') Current Tenant
+                        |         
+                        option Former Tenant                      
+                    .form-group.col-md-6 
+                      label(for='inputState') House Number
+                      select#inputState.form-control
+                        option(selected='') B1
+                        |         
+                        option B2
+                        option B3
+
+
+            // Modal footer
+            .modal-footer
+              p 
+              button.btn.btn-link(type='button', data-dismiss='modal') Cancel
+              button.btn.btn-success(type='button') Update
+
+      #uNewTenant.modal(data-backdrop="static" data-keyboard="false")
+
+        .modal-dialog
+          .modal-content
+            // Modal Header
+            .modal-header
+              h4.modal-title New Tenant Details
+              |         
+              button.close(type='button', data-dismiss='modal') &times;
+            // Modal body
+            .modal-body
+
+              .formWrapper
+                form.formB
+                  p
+                    strong Personal Details                
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputName') Full Name
+                      |       
+                      input#inputName.form-control(type='text', placeholder='Full Name')
+                    |     
+                    .form-group.col-md-6
+                      label(for='inputEmail') Email Address
+                      |       
+                      input#inputEmail4.form-control(type='email', placeholder='Email Address')
+                  |   
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputName') Phone Number
+                      |       
+                      input#inputName.form-control(type='text', placeholder='Phone Number')
+                    |     
+                    .form-group.col-md-6
+                      label(for='inputDate') Date Joined
+                      |       
+                      input#inputDate.form-control(type='text', placeholder='5 August, 2019', readonly)
+
+                  p
+                    strong Financials
+                  .form-row
+                    .form-group.col-md-6
+                      label(for='inputRent') Rent
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')                  
+                    .form-group.col-md-6                      
+                      label(for='inputRent') Garbage
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')
+                    
+                    .form-group.col-md-6
+                      label(for='inputRent') Water
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')
+
+                    .form-group.col-md-6 
+                      label(for='inputRent') Expense Name
+                      .input-group.mb-3
+                        .input-group-prepend
+                          .input-group-text#basic-addon1 KES
+                        |     
+                        input#inputRent.form-control(type='text', placeholder='000')  
+                  
+                  p
+                    strong Status    
+
+                  .form-row    
+                    .form-group.col-md-6 
+                      label(for='inputState') Tenancy Status
+                      select#inputState.form-control
+                        option(selected='') Current Tenant
+                        |         
+                        option Former Tenant                      
+                    .form-group.col-md-6 
+                      label(for='inputState') House Number
+                      select#inputState.form-control
+                        option(selected='') B1
+                        |         
+                        option B2
+                        option B3
+
+
+            // Modal footer
+            .modal-footer
+              p 
+              button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+              button.btn.btn-success(type='button') Save

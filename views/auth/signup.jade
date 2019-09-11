@@ -1,0 +1,47 @@
+extends ../layout
+block vars
+  - var bodyClass = 'auth signup-page';
+  - var activeClass = 'active';
+   
+block content
+  .auth_wrapper.container-fluid.no-padding
+    //- h.container
+      1.text-center Signup
+    .singup-wrapper
+      .row.clearfix
+        .col-md-8
+          .signup_info.p-5
+            h1 Manage Your Tenants &nbsp;
+              span Bila Stress!
+            ul
+              li Benefit 1
+              li Benefit 2
+              li Benefit 3
+              li Benefit 4
+        .col-md-4
+          .signup_actions.p-5
+            .form_groups
+              form(class="homeSignup formA")
+                h1(class="h3 h3A mb-h3") Sign Up
+                .form-group
+                  label(for="fullName" placeholder="Full Name") Full Name
+                  input(type="text" class="form-control" id="firstName" placeholder="")
+                .form-group
+                  label(for="emailAddress" placeholder="Email Address") Email Address
+                  input(type="email" class="form-control" id="emailAddress" placeholder="")
+                .form-group
+                  label(for="phoneNumber" placeholder="Phone Number") Phone Number
+                  input(type="text" class="form-control" id="phoneNumber" placeholder="")
+                .form-group
+                  label(for="Password" placeholder="Password") Password
+                  input(type="password" class="form-control" id="Password" placeholder="")
+                .form-group
+                  label(for="Password" placeholder="Confirm Password") Confirm Password
+                  input(type="password" class="form-control" id="ConfPassword" placeholder="")                                        
+                .form-group
+                  .checkbox
+                    label
+                      input(type='checkbox',checked='checked')
+                      |  I accept the Terms of Service
+                .form-group
+                  input.btn.btn-primary.btn-lg.btn-block.strong.cta_2(type='submit', value='Sign me up!')

@@ -1,6 +1,12 @@
 extends layout
+block vars
+  - var bodyClass = 'error-page';
+  - var activeClass = 'active';
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .error_wrapper.container-fluid
+    .container
+      .text-left
+        h1= message
+        h2= error.status
+      pre #{error.stack}

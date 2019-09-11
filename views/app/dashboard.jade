@@ -1,0 +1,15 @@
+extends ../app/layout_app
+
+block vars
+  - var bodyClass = 'dashboard dashboard-index';
+  - var activeClass = 'active';
+
+block appSidebar
+  // p Dashboard
+
+block appMain
+  h2.main_sub_title.text-center Welcome, 
+    span Eugene Nyawara 
+  p.sub_sub_title.text-center Notifications on things that need to be done.
+  <br><hr><br>
+  p.sub_sub_title.text-center Timeline of Activities By Month & by Property

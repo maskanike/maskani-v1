@@ -1,7 +1,48 @@
 extends layout
+block vars
+  - var bodyClass = 'home';
+  - var activeClass = 'active';
 
 block content
-  .mdl-grid
-    .mdl-cell.mdl-cell--12-col
-      h1= title
-      p Welcome to #{title}
+  .home_banner.container-fluid.no-padding
+    section(class="home_bannerA jumbotron")
+      .container
+        .row.justify-content-end.clearfix
+          .col-lg-7.col-md-7.col-sm-12
+            .home_banner_headline_wapper
+              h1 Manage Your Tenants 
+                span Bila Stress!
+                .home_banner_in
+                  h4 Maskani is a rental management application for the busy person. Easily invoice &amp; send receipts to tenants via SMS &amp; Email, and record important tenant information.
+                  h3 Give it a try, it's 
+                    span simple.
+          .col-lg-5.col-md-5.col-sm-12
+            .home_banner_cta_wrapper
+              h4(class="titleA") Free for basic use
+              .home_banner_signup_form
+                form(class="homeSignup formA")
+                  .form-group
+                    label(for="fullName" placeholder="Full Name") Full Name
+                    input(type="text" class="form-control" id="firstName" placeholder="")
+                  .form-group
+                    label(for="emailAddress" placeholder="Email Address") Email Address
+                    input(type="email" class="form-control" id="emailAddress" placeholder="")
+                  .form-group
+                    label(for="phoneNumber" placeholder="Phone Number") Phone Number
+                    input(type="text" class="form-control" id="phoneNumber" placeholder="")
+                  .form-group
+                    label(for="Password" placeholder="Password") Password
+                    input(type="password" class="form-control" id="Password" placeholder="")
+                  .form-group
+                    label(for="Password" placeholder="Confirm Password") Confirm Password
+                    input(type="password" class="form-control" id="ConfPassword" placeholder="")  
+                  .form-group
+                    .checkbox
+                      label
+                        input(type='checkbox',checked='checked')
+                        |  I accept the Terms of Service                                                          
+                  .form-group
+                    input.btn.btn-primary.btn-lg.btn-block.strong.cta_2(type='submit', value='Sign me up!')
+
+            //- h1= title
+            //- p Welcome to #{title}

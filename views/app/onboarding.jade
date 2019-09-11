@@ -1,0 +1,24 @@
+extends ../app/layout_app_fullwidth
+
+// App redirects to this view after signup, and if user has not added a property or did not finish this setup.
+// Infact, we are going to hide the navbar at this stage so the user's attention is in getting this work done.
+// Email Confirmation can be prompted when the user has already finished onboarding. At that point we may require them to confirm email before invoicing and stuff.
+
+block vars
+  - var bodyClass = 'dashboard dashboard-onboarding';
+  - var activeClass = 'active';
+
+block appMain
+  .appHeader.text-center
+    h1 Let's Get Started
+    h3 Step 1 of 3
+    // PROPERTY - THEN UNITES - THEN TENANTS
+    // THIS PROCESS NEEDS TO BE AS SMOOTH AS POSSIBLE, SO THE CLIENT DOES NOT GET FRUSTRATED
+  .appBlocksA
+    .formC
+      h4.text-center Add Your First Property
+      p Property Name
+      p Location 
+      p etc
+
+
