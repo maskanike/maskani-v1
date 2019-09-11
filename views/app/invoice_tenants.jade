@@ -70,39 +70,42 @@ block appMain
             th(scope='col', class='t') Action
         tbody
           tr
-            td -
-            th(scope='row') B1
-            td Faith Secondname
-         
-            td 
-              p Tel: 0720000000
-              p Email: faith@example.com
-            td 
-              p Rent: KES 7,000
-              p Garbage: KES 150
-              p Water: KES 100
-            td 
-              //ul.list-inline
-                li.list-inline-item
-                  .switchWrap
-                    label.switch
-                      input(type='checkbox')
-                      |             
-                      span.slider
-                    |         Done
+            form.form1
+              td -
+              th(scope='row') B1
+              td Faith Secondname
+          
+              td 
+                p Tel: 0720000000
+                p Email: faith@example.com
+              td 
+                p Rent: KES 7,000
+                p Garbage: KES 150
+                p Water: KES 100
+              td 
+                //ul.list-inline
+                  li.list-inline-item
+                    .switchWrap
+                      label.switch
+                        input(type='checkbox')
+                        |             
+                        span.slider
+                      |         Done
 
-              select.form-control
-                option Not Yet Ready
-                option Ready to send
-                option Already sent
-                option Do no send
+                select.form-control
+                  option Not Yet Ready
+                  option Ready to send
+                  option Already sent
+                  option Do no send
 
-            td                 
-              p 
-                a(data-toggle='modal', data-target='#uAllTenants' href="#nogo") Edit 
+              td                 
+                p 
+                  a(data-toggle='modal', data-target='#uAllTenants' href="#nogo") Edit 
 
-            td 
-              button(class='btn btn-block btn-success') Confirm Information
+              td 
+                button(class='btn btn-block btn-success') Confirm Information
+                button(class='btn btn-block btn-primary') Send Invoice
+
           tr
             td -
             th(scope='row') B2
