@@ -7,6 +7,7 @@ const unit = (sequelize, DataTypes) => {
 
   Unit.associate = models => {
     Unit.belongsTo(models.Flat);
+    Unit.belongsTo(models.Tenant);
   };
 
   return Unit;

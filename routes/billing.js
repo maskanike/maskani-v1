@@ -18,22 +18,44 @@ router.post('/invoice', async (req, res) => {
       penalty,
       tenantId,
     });
-    const totalBill = rent + water + penalty;
+    const totalRent = rent + water + penalty;
     await req.context.models.Statement.create({
-      amount: totalBill,
+      amount: totalRent,
       type: 'invoice',
       tenantId,
       // TODO keep track of how much a tenant owes.
     });
-    const message = `Your bill for the month Feb is 10 bob`
+
+    const date  = new Date();
+    const month = date.toLocaleString('en-us', { month:'short' }); // From: https://stackoverflow.com/a/18648314/1330916
+    const year  = date.getFullYear();
+
     const tenant = await req.context.models.Tenant.findByPk(tenantId);
-    const user = await tenant.getUser()
-    const flat = await tenant.getFlat()
+    const user = await tenant.getUser();
+    const flat = await tenant.getFlat();
+    const unit = await tenant.getUnit();
     
     const flatUser = await req.context.models.User.findByPk(flat.userId);
 
-    await sendEmail(req, flatUser.email, user.email, 'Your Invoice this Month | Maskani', message)
-    await sendSMS(req, user.msisdn, message)
+    const sms = `Hello ${user.name.split(' ')[0]}! This is an invoice for ${unit.name} at ${flat.name} for the period ${month} - ${year}.\nTOTAL: ${totalRent}\n` +
+    `Sent to your email ${user.email}.`;
+    await sendSMS(req, user.msisdn, sms);
+
+    const emailData = {
+      to: user.email,
+      from: flatUser.email,
+      name: flatUser.name,
+      flat: flat.name,
+      unit: unit.name,
+      month,
+      year,
+      totalRent,
+      rent,
+      water,
+      penalty,
+    }
+
+    await sendEmail(req, emailData)
 
     return res.send(invoice);
   } catch (error) {

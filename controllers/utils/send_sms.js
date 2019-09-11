@@ -33,7 +33,7 @@ async function sendSMS(req, msisdn, message) {
       type: 'sms',
       status: 'success',
     });
-
+    console.log('SMS sent successfully: ', message, ' to ', msisdn);
   } catch (e) {
     await req.context.models.Notification.create({
       message,
@@ -42,6 +42,7 @@ async function sendSMS(req, msisdn, message) {
       error: e,
       status: 'failed',
     });
+    console.error('SMS sending failed: ', message, ' to ', msisdn);
   }
 };
 
