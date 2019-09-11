@@ -17,7 +17,7 @@ async function sendEmail(req, data) {
     `<p style="margin-bottom: 25px;">Dear ${data.name},</p>` +
     `<p style="margin-bottom: 25px;">Thank you for being a tenant at <b> ${data.flat} </b>; unit  <b> ${data.unit} </b>.` +
     `Your invoice for ${data.month} ${data.year} is ready.</p>` +
-    `<p style="margin-bottom: 25px;">Please pay <b> ${data.totalRent} KSHS</b> before 5th of ${data.month} .</p>` +
+    `<p style="margin-bottom: 25px;">Please pay <b> ${data.totalRent} KSHS</b> before 5th of ${data.month}.</p> ` +
     `<p style="margin-bottom: 25px;">Your rental breakdown is as follows:</p>` +
     `<ul class="list-group list-group-flush"></ul>` +
     `<li class="list-group-item">Rent Due: <a style="color: #28AFB0; word-wrap: break-word;"> ${data.rent} </a></li>` +
