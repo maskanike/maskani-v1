@@ -7,6 +7,17 @@ const user = (sequelize, DataTypes) => {
     name:     { type:DataTypes.STRING, },
     status:   { type:DataTypes.ENUM, values:['active', 'pending', 'deleted'] },
     role:     { type:DataTypes.ENUM, values:['landlord', 'agent', 'tenant'] },
+  }, { hooks: {
+    beforeCreate: (user) => {
+      const salt = bcrypt.genSaltSync();
+      user.password = bcrypt.hashSync(user.password, salt);
+    }
+  },
+  instanceMethods: {
+    validPassword: function(password) {
+      return bcrypt.compareSync(password, this.password);
+    }
+  }
   });
   User.associate = models => {
     User.hasOne(models.Flat);

@@ -1,6 +1,7 @@
 
 require('dotenv').config();
 import Sequelize from 'sequelize';
+var bcrypt = require('bcrypt');
 
 const databaseUrl = process.env.DATABASE_URL || '' // TODO add a default localhost database URL for test env.
 const sequelize = new Sequelize(databaseUrl);
