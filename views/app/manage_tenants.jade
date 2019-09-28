@@ -4,6 +4,9 @@ block vars
   - var bodyClass = 'dashboard manage-tenants-index';
   //- - var activeClass = 'active';
 
+block menu
+  include ../menus/logged_in.jade
+ 
 block appSidebar
   // p Manage Tenants
 
@@ -226,83 +229,82 @@ block appMain
             // Modal body
             .modal-body
 
-              .formWrapper
-                form.formB
-                  p
-                    strong Personal Details                
-                  .form-row
-                    .form-group.col-md-6
-                      label(for='inputName') Full Name
-                      |       
-                      input#inputName.form-control(type='text', placeholder='Full Name')
-                    |     
-                    .form-group.col-md-6
-                      label(for='inputEmail') Email Address
-                      |       
-                      input#inputEmail4.form-control(type='email', placeholder='Email Address')
-                  |   
-                  .form-row
-                    .form-group.col-md-6
-                      label(for='inputName') Phone Number
-                      |       
-                      input#inputName.form-control(type='text', placeholder='Phone Number')
-                    |     
-                    .form-group.col-md-6
-                      label(for='inputDate') Date Joined
-                      |       
-                      input#inputDate.form-control(type='text', placeholder='5 August, 2019', readonly)
+              .formWrapper             
+                p
+                  strong Personal Details                
+                .form-row
+                  .form-group.col-md-6
+                    label(for='inputName') Full Name
+                    |       
+                    input#inputName.form-control(type='text', placeholder='Full Name')
+                  |     
+                  .form-group.col-md-6
+                    label(for='inputEmail') Email Address
+                    |       
+                    input#inputEmail4.form-control(type='email', placeholder='Email Address')
+                |   
+                .form-row
+                  .form-group.col-md-6
+                    label(for='inputName') Phone Number
+                    |       
+                    input#inputName.form-control(type='text', placeholder='Phone Number')
+                  |     
+                  .form-group.col-md-6
+                    label(for='inputDate') Date Joined
+                    |       
+                    input#inputDate.form-control(type='text', placeholder='5 August, 2019', readonly)
 
-                  p
-                    strong Financials
-                  .form-row
-                    .form-group.col-md-6
-                      label(for='inputRent') Rent
-                      .input-group.mb-3
-                        .input-group-prepend
-                          .input-group-text#basic-addon1 KES
-                        |     
-                        input#inputRent.form-control(type='text', placeholder='000')                  
-                    .form-group.col-md-6                      
-                      label(for='inputRent') Garbage
-                      .input-group.mb-3
-                        .input-group-prepend
-                          .input-group-text#basic-addon1 KES
-                        |     
-                        input#inputRent.form-control(type='text', placeholder='000')
-                    
-                    .form-group.col-md-6
-                      label(for='inputRent') Water
-                      .input-group.mb-3
-                        .input-group-prepend
-                          .input-group-text#basic-addon1 KES
-                        |     
-                        input#inputRent.form-control(type='text', placeholder='000')
-
-                    .form-group.col-md-6 
-                      label(for='inputRent') Expense Name
-                      .input-group.mb-3
-                        .input-group-prepend
-                          .input-group-text#basic-addon1 KES
-                        |     
-                        input#inputRent.form-control(type='text', placeholder='000')  
+                p
+                  strong Financials
+                .form-row
+                  .form-group.col-md-6
+                    label(for='inputRent') Rent
+                    .input-group.mb-3
+                      .input-group-prepend
+                        .input-group-text#basic-addon1 KES
+                      |     
+                      input#inputRent.form-control(type='text', placeholder='000')                  
+                  .form-group.col-md-6                      
+                    label(for='inputRent') Garbage
+                    .input-group.mb-3
+                      .input-group-prepend
+                        .input-group-text#basic-addon1 KES
+                      |     
+                      input#inputRent.form-control(type='text', placeholder='000')
                   
-                  p
-                    strong Status    
+                  .form-group.col-md-6
+                    label(for='inputRent') Water
+                    .input-group.mb-3
+                      .input-group-prepend
+                        .input-group-text#basic-addon1 KES
+                      |     
+                      input#inputRent.form-control(type='text', placeholder='000')
 
-                  .form-row    
-                    .form-group.col-md-6 
-                      label(for='inputState') Tenancy Status
-                      select#inputState.form-control
-                        option(selected='') Current Tenant
-                        |         
-                        option Former Tenant                      
-                    .form-group.col-md-6 
-                      label(for='inputState') House Number
-                      select#inputState.form-control
-                        option(selected='') B1
-                        |         
-                        option B2
-                        option B3
+                  .form-group.col-md-6 
+                    label(for='inputRent') Expense Name
+                    .input-group.mb-3
+                      .input-group-prepend
+                        .input-group-text#basic-addon1 KES
+                      |     
+                      input#inputRent.form-control(type='text', placeholder='000')  
+                
+                p
+                  strong Status    
+
+                .form-row    
+                  .form-group.col-md-6 
+                    label(for='inputState') Tenancy Status
+                    select#inputState.form-control
+                      option(selected='') Current Tenant
+                      |         
+                      option Former Tenant                      
+                  .form-group.col-md-6 
+                    label(for='inputState') House Number
+                    select#inputState.form-control
+                      option(selected='') B1
+                      |         
+                      option B2
+                      option B3
 
 
             // Modal footer

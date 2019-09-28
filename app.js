@@ -10,7 +10,12 @@ const authRouter = require('./routes/auth');
 const billingRouter = require('./routes/billing');
 const tenantRouter = require('./routes/tenant_management');
 
-import models, { sequelize, createLandlordWithFlat, createTenantWithUnit } from './models';
+import models, 
+  { sequelize,
+    createLandlordWithFlat,
+    createTenantEugeneWithUnit,
+    createTenantMagonduWithUnit
+  } from './models';
 
 const eraseDatabaseOnSync = process.env.NODE_ENV === 'test'? true:false; // TODO set this to false for all envs when in production
 
@@ -63,7 +68,8 @@ var port = normalizePort(process.env.PORT || '3000');
 sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
   if (eraseDatabaseOnSync) {
     createLandlordWithFlat();
-    createTenantWithUnit();
+    createTenantEugeneWithUnit();
+    createTenantMagonduWithUnit();
   }
 
   app.listen(port, () => {

@@ -4,7 +4,7 @@ const AT_USERNAME = process.env.AT_USERNAME;
 const AT_APIKEY = process.env.AT_APIKEY;
 
 async function sendSMS(req, msisdn, message) {
-  if (!AT_APIKEY || !AT_USERNAME){
+  if (!AT_APIKEY || !AT_USERNAME) {
     console.log('Africastaking APIKEY or USERNAME missing from env variables. Please add them');
     return;
   }
@@ -33,7 +33,9 @@ async function sendSMS(req, msisdn, message) {
       type: 'sms',
       status: 'success',
     });
+    
     console.log('SMS sent successfully: ', message, ' to ', msisdn);
+
   } catch (e) {
     await req.context.models.Notification.create({
       message,

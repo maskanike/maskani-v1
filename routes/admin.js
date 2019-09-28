@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.send('Welcome to the Admin API');
 });
 
@@ -31,7 +31,7 @@ router.delete('/flat/:flatId', async (req, res) => {
 router.put('/flat/:flatId', async (req, res) => {
   const message = await req.context.models.Flat.update(
     { name: req.body.name, paymentDetails: req.body.paymentDetails },
-    { returning: true, where:{ id: req.params.flatId }}
+    { returning: true, where: { id: req.params.flatId } }
   );
   return res.send(message);
 });
@@ -45,7 +45,15 @@ router.get('/unit', async (req, res) => {
   if (!flatId) {
     return res.send('Flat not specified. Add ?flatId=')
   }
-  const units = await req.context.models.Unit.findAll({ where: { flatId }});
+  const units = await req.context.models.Unit.
+    findAll({
+      where: { flatId },
+      include: [
+        {
+          model: req.context.models.Tenant,
+          include: [req.context.models.User, req.context.models.Invoice]
+        }]
+    });
   return res.send(units);
 });
 
@@ -69,7 +77,7 @@ router.delete('/unit/:unitId', async (req, res) => {
 router.put('/unit/:unitId', async (req, res) => {
   const message = await req.context.models.Unit.update(
     { name: req.body.name, status: req.body.status },
-    { returning: true, where:{ id: req.params.unitId }}
+    { returning: true, where:{ id: req.params.unitId } }
   );
   return res.send(message);
 });

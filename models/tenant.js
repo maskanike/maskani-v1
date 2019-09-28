@@ -4,6 +4,10 @@ const tenant = (sequelize, DataTypes) => {
     rent:    { type:DataTypes.INTEGER, },
     deposit: { type:DataTypes.INTEGER, },
     balance: { type:DataTypes.INTEGER, default:0 },
+    water:   { type:DataTypes.INTEGER, default:0 },
+    garbage: { type:DataTypes.INTEGER, default:0 },
+    penalty: { type:DataTypes.INTEGER, default:0 },
+    status:  { type:DataTypes.ENUM, values:['unchanged', 'changed', 'left'] },
   });
 
   Tenant.associate = models => {

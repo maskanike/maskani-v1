@@ -4,6 +4,8 @@ extends ../layout
 //- block vars
    
 block content
+  script(src='/javascript/authManager-client.js')
+
   .page_wrapper.container-fluid.no-padding
     .app_rowA.row.clearfix
       .app_colA_out.col-md-2.clearfix
@@ -38,7 +40,7 @@ block content
               li
                 a(href="#nogo") Help!                      
               li              
-                a(href="#nogo") Logout
+                a#logout(href="#nogo" onclick="logout()") Logout
 
           block appSidebar
               

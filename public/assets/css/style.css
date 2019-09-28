@@ -459,4 +459,6 @@ tr.table-side-occupied {
     background: #1a0098;
     color: #FFF;
 }
-
+.tab-pane { 
+    padding: 1rem;
+}

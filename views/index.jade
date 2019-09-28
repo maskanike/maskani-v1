@@ -3,7 +3,11 @@ block vars
   - var bodyClass = 'home';
   - var activeClass = 'active';
 
+block menu
+  include ./menus/logged_out.jade
+
 block content
+  script(src='/javascript/authManager-client.js')
   .home_banner.container-fluid.no-padding
     section(class="home_bannerA jumbotron")
       .container
@@ -20,22 +24,22 @@ block content
             .home_banner_cta_wrapper
               h4(class="titleA") Free for basic use
               .home_banner_signup_form
-                form(class="homeSignup formA")
+                form#signupForm(class="homeSignup formA" method='POST' action='/auth/signup')
                   .form-group
                     label(for="fullName" placeholder="Full Name") Full Name
-                    input(type="text" class="form-control" id="firstName" placeholder="")
+                    input(type="text" class="form-control" id="signupName" placeholder="" required autofocus)
                   .form-group
                     label(for="emailAddress" placeholder="Email Address") Email Address
-                    input(type="email" class="form-control" id="emailAddress" placeholder="")
+                    input(type="email" class="form-control" id="signupEmail" placeholder="" required)
                   .form-group
                     label(for="phoneNumber" placeholder="Phone Number") Phone Number
-                    input(type="text" class="form-control" id="phoneNumber" placeholder="")
+                    input(type="text" class="form-control" id="signupPhone" placeholder="" required)
                   .form-group
                     label(for="Password" placeholder="Password") Password
-                    input(type="password" class="form-control" id="Password" placeholder="")
+                    input(type="password" class="form-control" id="signupPass1" placeholder="" required)
                   .form-group
                     label(for="Password" placeholder="Confirm Password") Confirm Password
-                    input(type="password" class="form-control" id="ConfPassword" placeholder="")  
+                    input(type="password" class="form-control" id="signupPass2" placeholder="" required)  
                   .form-group
                     .checkbox
                       label

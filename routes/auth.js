@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+import Login from '../controllers/auth/login'
+import Signup from '../controllers/auth/signup'
 
 router.get('/', function(req, res) {
   res.send('Welcome to the Auth API');
@@ -39,6 +42,27 @@ router.put('/:userId', async (req, res) => {
     { returning:true, where:{ id:req.params.userId }}
   );
   return res.send(message);
+});
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  const response = await Login(email, password);
+  if (response.error) {
+    return res.status(400).send(response);
+  }
+  return res.status(200).send(response);
+});
+
+router.post('/signup', async (req, res) => {
+  console.log('req.body: ', req.body);
+
+  const { email, name, msisdn, password1, password2 } = req.body;
+  const response = await Signup(email, name, msisdn, password1, password2);
+  if (response.user) {
+    return res.send(response);
+  }
+  return res.status(401).send(response); // TODO return proper status codes
 });
 
 module.exports = router;

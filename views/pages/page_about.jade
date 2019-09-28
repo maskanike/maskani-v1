@@ -2,6 +2,9 @@ extends ../layout
 block vars
   - var bodyClass = 'page page-about';
   - var activeClass = 'active';
+
+block menu
+  include ../menus/logged_out.jade
    
 block content
   .page_wrapper.container-fluid

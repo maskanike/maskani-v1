@@ -2,6 +2,9 @@ extends ../layout
 block vars
   - var bodyClass = 'auth signup-page';
   - var activeClass = 'active';
+
+block menu
+  include ../menus/logged_out.jade
    
 block content
   .auth_wrapper.container-fluid.no-padding
@@ -21,27 +24,27 @@ block content
         .col-md-4
           .signup_actions.p-5
             .form_groups
-              form(class="homeSignup formA")
+              form#signupForm(class="homeSignup formA" method='POST' action='/auth/signup')
                 h1(class="h3 h3A mb-h3") Sign Up
                 .form-group
                   label(for="fullName" placeholder="Full Name") Full Name
-                  input(type="text" class="form-control" id="firstName" placeholder="")
+                  input(type="text" class="form-control" id="signupName" placeholder="")
                 .form-group
                   label(for="emailAddress" placeholder="Email Address") Email Address
-                  input(type="email" class="form-control" id="emailAddress" placeholder="")
+                  input(type="email" class="form-control" id="signupEmail" placeholder="")
                 .form-group
                   label(for="phoneNumber" placeholder="Phone Number") Phone Number
-                  input(type="text" class="form-control" id="phoneNumber" placeholder="")
+                  input(type="text" class="form-control" id="signupPhone" placeholder="")
                 .form-group
                   label(for="Password" placeholder="Password") Password
-                  input(type="password" class="form-control" id="Password" placeholder="")
+                  input(type="password" class="form-control" id="signupPass1" placeholder="")
                 .form-group
                   label(for="Password" placeholder="Confirm Password") Confirm Password
-                  input(type="password" class="form-control" id="ConfPassword" placeholder="")                                        
+                  input(type="password" class="form-control" id="signupPass2" placeholder="")                                        
                 .form-group
                   .checkbox
                     label
-                      input(type='checkbox',checked='checked')
+                      input(type='checkbox', checked='checked')
                       |  I accept the Terms of Service
                 .form-group
                   input.btn.btn-primary.btn-lg.btn-block.strong.cta_2(type='submit', value='Sign me up!')

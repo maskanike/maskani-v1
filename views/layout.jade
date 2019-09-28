@@ -9,9 +9,9 @@ html(lang="en")
     link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", crossorigin="anonymous")
     link(rel='stylesheet', href='/assets/css/style.css')
 
-    script(defer, src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
-    script(defer, src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js", integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1", crossorigin="anonymous")
-    script(defer, src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM", crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.4.1.min.js", integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=", crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js", integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1", crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM", crossorigin="anonymous")
     title= title
 
     - var bodyClass = '';
@@ -26,21 +26,8 @@ html(lang="en")
         span(class="navbar-toggler-icon")
 
       nav(class="navbarA my-2 my-md-0 mr-md-3")
-        
-        // SHOW THE FOLLOWING LIST ONLY WHEN THE USER IS LOGGED OUT
-        a(class=(thisPage === 'home' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="/") Home
-        a(class=(thisPage === 'features' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="/features") Features
-        a(class=(thisPage === 'pricing' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="/pricing") Pricing
-        a(class=(thisPage === 'login' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="/login") Login
-        a(class="strong cta_1 p-2 text-light btn btn-primary" href="/signup") Try for free
 
-        // SHOW THE FOLLOWING LIST ONLY WHEN THE USER IS LOGGED IN
-        a(class=(thisPage === 'dashboard' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="/app/dashboard") Dashboard
-        <!-- Manage will be replaced with Search -->
-        a(class=(thisPage === 'manage' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="#nogo") Manage
-        a(class=(thisPage === 'notifications' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="#nogo") Notifications
-        a(class=(thisPage === 'myAccount' ? 'active p-3 text-dark' : ''), class="p-3 text-dark" href="#nogo") My Account
-        a(class="strong cta_1 p-2 text-light btn btn-primary" href="#nogo") + Add
+      block menu
 
     .equalizer
 
