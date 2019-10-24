@@ -61,8 +61,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// module.exports = app;
-
 var port = normalizePort(process.env.PORT || '3000');
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
@@ -93,6 +91,8 @@ function normalizePort(val) {
 
   return false;
 }
+
+module.exports = app;
 
 // app.set('port', port);
 
