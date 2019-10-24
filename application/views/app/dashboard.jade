@@ -11,8 +11,10 @@ block appSidebar
   // p Dashboard
 
 block appMain
+  script(src='/javascript/dashboardManager-client.js')
+
   h2.main_sub_title.text-center Welcome, 
-    span Eugene Nyawara 
+    span#loggedInUserName John Doe 
   p.sub_sub_title.text-center Notifications on things that need to be done.
   <br><hr><br>
   p.sub_sub_title.text-center Timeline of Activities By Month & by Property

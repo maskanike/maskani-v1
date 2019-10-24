@@ -45,6 +45,7 @@ router.get('/unit', async (req, res) => {
   if (!flatId) {
     return res.send('Flat not specified. Add ?flatId=')
   }
+
   const units = await req.context.models.Unit.
     findAll({
       where: { flatId },
@@ -52,7 +53,10 @@ router.get('/unit', async (req, res) => {
         {
           model: req.context.models.Tenant,
           include: [req.context.models.User, req.context.models.Invoice]
-        }]
+        }],
+      order: [
+        ['name', 'DESC'],
+      ],
     });
   return res.send(units);
 });
