@@ -23,22 +23,22 @@ block content
               li
                 a(href="#nogo", class=(activePage === 'conirm_payments' ? 'active' : '')) Confirm Payments
               li.break
-              li.sidebarTitle Manage
-              li
-                a(href="/app/manage-tenants", class=(activePage === 'manage_tenants' ? 'active' : '')) Manage Tenants
-              li
-                a(href="#nogo", class=(activePage === 'manage_units' ? 'active' : '')) Manage Units
-              li
-                a(href="#nogo", class=(activePage === 'manage_properties' ? 'active' : '')) Manage Properties
+              //- li.sidebarTitle Manage
+              //- li
+              //-   a(href="/app/manage-tenants", class=(activePage === 'manage_tenants' ? 'active' : '')) Manage Tenants
+              //- li
+              //-   a(href="#nogo", class=(activePage === 'manage_units' ? 'active' : '')) Manage Units
+              //- li
+              //-   a(href="#nogo", class=(activePage === 'manage_properties' ? 'active' : '')) Manage Properties
               li.break
-              li.sidebarTitle More  
-              li          
-                a(href="/app/onboarding", class=(activePage === 'onboarding' ? 'active' : '')) Onboarding URL   
-              li
+              li.sidebarTitle Settings  
+              //- li          
+              //-   a(href="/app/onboarding", class=(activePage === 'onboarding' ? 'active' : '')) Onboarding URL   
+              //- li
                 // Here we will be able to change billing cycles and stuff like that.
                 a(href="#nogo") Account Settings                
               li
-                a(href="#nogo") Help!                      
+                a(href="#nogo") Help                     
               li              
                 a#logout(href="#nogo" onclick="logout()") Logout
 
