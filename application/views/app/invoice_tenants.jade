@@ -153,7 +153,7 @@ block appMain
               button(class='btn btn-block btn-primary') Edit / Done            
 
     figure.mainActions.text-center.p-5
-      button.btn.btn-success.btn-lg(type='button') Create Units
+      button(class='btn btn-lg btn-success' data-toggle='modal', data-target='#uAddUnit') Add Unit
       br
       
       .modalGroup
@@ -411,4 +411,27 @@ block appMain
                         p 
                         button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
                         button.btn.btn-success(type='button', onClick='submitCreateNewTenantForUnitForm()') Save
+
+        #uAddUnit.modal(data-backdrop="static" data-keyboard="false")
+          .modal-dialog
+            .modal-content
+              // Modal Header
+              .modal-header
+                h4.modal-title Add Unit
+                |         
+                button.close(type='button', data-dismiss='modal') &times;
+              // Modal body
+              .modal-body
+                      .formWrapper
+                        form.formB.text-left
+                          .form-row
+                            .form-group.col-md-12
+                              label(for='newUnitName') Unit Name
+                              |       
+                              input#newUnitName.form-control(type='text', placeholder='Name', required)
+                      // Modal footer
+                      .modal-footer
+                        p 
+                        button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                        button.btn.btn-success(type='button', onClick='createUnit()') Save
 

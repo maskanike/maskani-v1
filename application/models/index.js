@@ -56,23 +56,23 @@ const createLandlordWithFlat = async () => {
       role:     'landlord',
       flat: [
         {
-          name:           'awesome flat',
+          name:           'Watercress Woods',
           paymentDetails: '00001000010000',
           units: [
             {
-              name:   'Unit 1',
+              name:   '3E/07',
               status: 'active',
             },
             {
-              name:   'Unit 2',
+              name:   '3E/01',
               status: 'active',
             },
             {
-              name:   'Unit 3',
+              name:   '3E/02',
               status: 'active',
             },
             {
-              name:   'Unit 4',
+              name:   '3E/03',
               status: 'active',
             }
           ]
@@ -116,7 +116,7 @@ const createTenantMagonduWithUnit = async () => {
       include: [ models.User ],
     },
   );
-  tenant.setUnit(2);
+  tenant.setUnit(1);
   tenant.setFlat(1);
 };
 
@@ -145,7 +145,7 @@ const createTenantEugeneWithUnit = async () => {
       include: [ models.User ],
     },
   );
-  tenant.setUnit(1);
+  tenant.setUnit(2);
   tenant.setFlat(1);
 
   // TODO remove this after testing

@@ -14,13 +14,13 @@ function getFlats() {
     // TODO Weird workaround to get valid JSON. Move this to the backend.
     const parsedData = jQuery.parseJSON(JSON.stringify(data));
     buildUnitTable(parsedData[0].id);
-  
+
     $('#defaultFlat').html = '';
     $('#defaultFlat').append('<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-light dropdown-toggle">' + parsedData[0].name + '</button>');
-  
+
     currentFlatId = parsedData[0].id
     getFlatTenants(currentFlatId);
-  
+
     helpers.buildDropdown(
       parsedData,
       $('#flats')
@@ -108,15 +108,15 @@ function populateEditTenantModal() {
 function submitEditTenantForm() {
   const tenantId = tenantDataToEdit['tenantId']
 
-  tenantDataToEdit["name"]    = $("#inputName").val();
-  tenantDataToEdit["email"]   = $("#inputEmail").val();
-  tenantDataToEdit["rent"]    = $("#inputRent").val();
+  tenantDataToEdit["name"] = $("#inputName").val();
+  tenantDataToEdit["email"] = $("#inputEmail").val();
+  tenantDataToEdit["rent"] = $("#inputRent").val();
   tenantDataToEdit["garbage"] = $("#inputGarbage").val();
-  tenantDataToEdit["water"]   = $("#inputWater").val();
+  tenantDataToEdit["water"] = $("#inputWater").val();
   tenantDataToEdit["penalty"] = $("#inputPenalty").val();
-  tenantDataToEdit["status"]  = $("#inputStatus").val();
-  tenantDataToEdit["msisdn"]  = $("#inputPhone").val();
-  tenantDataToEdit["unitId"]  = $("#inputUnit").val();
+  tenantDataToEdit["status"] = $("#inputStatus").val();
+  tenantDataToEdit["msisdn"] = $("#inputPhone").val();
+  tenantDataToEdit["unitId"] = $("#inputUnit").val();
 
   $.ajax({
     url: `/tenant/ui/${tenantId}`,
@@ -146,7 +146,7 @@ function getFlatTenants(flatId) {
       if (data != '') {
         $.each(data, function (k, v) {
           if (!v.unit) {
-            $('#tenantsWithoutUnits').append('<option value='+ v.id +'>'+ v.user.name +' ('+ v.user.email+')</option>');
+            $('#tenantsWithoutUnits').append('<option value=' + v.id + '>' + v.user.name + ' (' + v.user.email + ')</option>');
           }
         })
       }
@@ -165,7 +165,7 @@ function submitAssignTenantToUnitForm() {
     type: 'POST',
     dataType: 'json',
     contentType: 'application/json',
-    data: JSON.stringify({ tenantId, unitId:unitToAddTenant }),
+    data: JSON.stringify({ tenantId, unitId: unitToAddTenant }),
     success: function () {
       window.location.href = '/app/invoice';
     },
@@ -178,16 +178,16 @@ function submitAssignTenantToUnitForm() {
 
 function submitCreateNewTenantForUnitForm() {
   const newTenant = {};
-  
-  newTenant["name"]    = $("#newTenantName").val();
-  newTenant["email"]   = $("#newTenantEmail").val();
-  newTenant["msisdn"]  = $("#newTenantPhone").val();
-  newTenant["rent"]    = $("#newTenantRent").val();
+
+  newTenant["name"] = $("#newTenantName").val();
+  newTenant["email"] = $("#newTenantEmail").val();
+  newTenant["msisdn"] = $("#newTenantPhone").val();
+  newTenant["rent"] = $("#newTenantRent").val();
   newTenant["garbage"] = $("#newTenantGarbage").val();
-  newTenant["water"]   = $("#newTenantWater").val();
+  newTenant["water"] = $("#newTenantWater").val();
   newTenant["penalty"] = $("#newTenantPenalty").val();
-  newTenant["unitId"]  = unitToAddTenant;
-  newTenant["flatId"]  = currentFlatId;
+  newTenant["unitId"] = unitToAddTenant;
+  newTenant["flatId"] = currentFlatId;
 
   const jwt = localStorage.getItem('token');
 
@@ -216,7 +216,37 @@ function getUnitIdFromOpenModal() {
   });
 }
 
-function toggleUnitDropDownIfTenantChanged(){
+function createUnit() {
+  const name = $("#newUnitName").val();
+
+  if (!name) {
+    alert('Name empty. Please fill');
+    return
+  }
+  else {
+    const flatId = 1
+    const status = "active";
+    request = $.ajax({
+      url: '/admin/unit',
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({ name, status, flatId }),
+    });
+
+    request.done(function (resp) {
+      console.log('/admin/unit response: ', resp);
+      alert('Unit created');
+      window.location.href = '/app/invoice';
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+      console.log('/admin/unit/ error: ', textStatus);
+    });
+  }
+}
+
+function toggleUnitDropDownIfTenantChanged() {
   $('#inputStatus').change(() => {
     const tenantStatus = $("#inputStatus").val()
     if (tenantStatus === 'left') {
