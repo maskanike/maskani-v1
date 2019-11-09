@@ -10,7 +10,13 @@ $(function () {
 })
 
 function getFlats() {
-  $.ajax({ url: '/admin/flat/' }).done(function (data) {
+  const jwt = localStorage.getItem('token');
+  $.ajax({ 
+    url: '/admin/flat/',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+    },
+  }).done(function (data) {
     // TODO Weird workaround to get valid JSON. Move this to the backend.
     const parsedData = jQuery.parseJSON(JSON.stringify(data));
     buildUnitTable(parsedData[0].id);
@@ -29,7 +35,13 @@ function getFlats() {
 }
 
 function buildUnitTable(flatId) {
-  $.ajax({ url: '/admin/unit/?flatId=' + flatId }).done(function (data) {
+  const jwt = localStorage.getItem('token');
+  $.ajax({ 
+    url: '/admin/unit/?flatId=' + flatId,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+    },
+  }).done(function (data) {
     $('#unitTable').empty();
     if (data != '') {
       $.each(data, function (k, v) {
@@ -62,7 +74,12 @@ function buildUnitTable(flatId) {
 
 function sendInvoice(tenantId, rent, water, garbage, penalty) {
   invoiceData = { "tenantId": tenantId, "rent": rent, "water": water, "garbage": garbage, "penalty": penalty };
+  const jwt = localStorage.getItem('token');
+
   request = $.ajax({
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+    },
     url: '/billing/invoice',
     type: 'POST',
     dataType: 'json',
@@ -117,8 +134,12 @@ function submitEditTenantForm() {
   tenantDataToEdit["status"] = $("#inputStatus").val();
   tenantDataToEdit["msisdn"] = $("#inputPhone").val();
   tenantDataToEdit["unitId"] = $("#inputUnit").val();
+  const jwt = localStorage.getItem('token');
 
   $.ajax({
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+    },
     url: `/tenant/ui/${tenantId}`,
     type: 'PUT',
     dataType: 'json',
@@ -159,8 +180,12 @@ function getFlatTenants(flatId) {
 
 function submitAssignTenantToUnitForm() {
   const tenantId = $("#tenantsWithoutUnits").val();
+  const jwt = localStorage.getItem('token');
 
   $.ajax({
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+    },
     url: `/tenant/ui/unit/assign/`,
     type: 'POST',
     dataType: 'json',
@@ -226,7 +251,12 @@ function createUnit() {
   else {
     const flatId = 1
     const status = "active";
+    const jwt = localStorage.getItem('token');
+
     request = $.ajax({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+      },
       url: '/admin/unit',
       type: 'POST',
       dataType: 'json',

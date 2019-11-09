@@ -80,77 +80,7 @@ block appMain
             //- th(scope='col', class='t') Invoice Status          
             th(scope='col', class='t') Edit          
             th(scope='col', class='t') Action
-        tbody#unitTable
-          tr
-            form.form1
-              td -
-              th(scope='row') B1
-              td Faith Secondname
-          
-              td 
-                p Tel: 0720000000
-                p Email: faith@example.com
-              td 
-                p Rent: KES 7,000
-                p Garbage: KES 150
-                p Water: KES 100
-              td 
-                //ul.list-inline
-                  li.list-inline-item
-                    .switchWrap
-                      label.switch
-                        input(type='checkbox')
-                        |             
-                        span.slider
-                      |         Done
-
-                select.form-control
-                  option Not Yet Ready
-                  option Ready to send
-                  option Already sent
-                  option Do no send
-
-              td                 
-                p 
-                  a(data-toggle='modal', data-target='#uAllTenants' href="#nogo") Edit 
-
-              td 
-                button(class='btn btn-block btn-success') Confirm Information
-                button(class='btn btn-block btn-primary') Send Invoice
-
-          tr
-            td -
-            th(scope='row') B2
-            td(colspan='5') Unoccupied
-            td(scope='row')
-              button(class='btn btn-block btn-light' data-toggle='modal', data-target='#uAddTenant') Add Tenant
-          tr
-            td -
-            th(scope='row') B3
-            td Kibali Kimemia
-            td <p>0720000000</p><p>kibali@example.com</p>
-            td KES 5,000
-            td <p>Garbage: KES 150</p><p>Water: KES 100</p>
-            td 
-              button(class='btn btn-block btn-primary') Edit / Done
-          tr
-            td -
-            th(scope='row') B4
-            td Saudi Kefa Nduva
-            td <p>0720000000</p><p>kefa@example.com</p>
-            td KES 5,000
-            td <p>Garbage: KES 150</p><p>Water: KES 100</p>
-            td 
-              button(class='btn btn-block btn-primary') Edit / Done
-          tr
-            td -
-            th(scope='row') B5
-            td Judith
-            td <p>0720000000</p><p>judith@example.com</p>
-            td KES 5,000
-            td <p>Garbage: KES 150</p><p>Water: KES 100</p>
-            td 
-              button(class='btn btn-block btn-primary') Edit / Done            
+        tbody#unitTable         
 
     figure.mainActions.text-center.p-5
       button(class='btn btn-lg btn-success' data-toggle='modal', data-target='#uAddUnit') Add Unit

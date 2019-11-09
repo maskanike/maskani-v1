@@ -71,7 +71,7 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
   }
 
   app.listen(port, () => {
-    console.log(`Example app listening on port ${port}!`)
+    console.log(`maskani app listening on port ${port}!`)
   });
 });
 
