@@ -51,6 +51,7 @@ block appMain
 
     // li.list-inline-item.normalButton.far-right
         button(class="btn btn-primary", type="button" ) + Do Something
+    button#addFlat(class="btn btn-primary", type="button" data-toggle="modal" data-target="#uAddFlat" style="background:blue;visibility:hidden;") Add Flat
 
 
   .main_head
@@ -364,4 +365,27 @@ block appMain
                         p 
                         button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
                         button.btn.btn-success(type='button', onClick='createUnit()') Save
+
+        #uAddFlat.modal(data-backdrop="static" data-keyboard="false")
+          .modal-dialog
+            .modal-content
+              // Modal Header
+              .modal-header
+                h4.modal-title Add Flat
+                |         
+                button.close(type='button', data-dismiss='modal') &times;
+              // Modal body
+              .modal-body
+                      .formWrapper
+                        form.formB.text-left
+                          .form-row
+                            .form-group.col-md-12
+                              label(for='newFlatName') Flat Name
+                              |       
+                              input#newFlatName.form-control(type='text', placeholder='Name', required)
+                      // Modal footer
+                      .modal-footer
+                        p 
+                        button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                        button.btn.btn-success(type='button', onClick='createFlat()') Save
 

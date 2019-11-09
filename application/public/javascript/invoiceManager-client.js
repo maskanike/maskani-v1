@@ -19,6 +19,10 @@ function getFlats() {
   }).done(function (data) {
     // TODO Weird workaround to get valid JSON. Move this to the backend.
     const parsedData = jQuery.parseJSON(JSON.stringify(data));
+    if (!parsedData[0]) {
+      $('#addFlat').css("visibility", "visible");
+      return;
+    }
     buildUnitTable(parsedData[0].id);
 
     $('#defaultFlat').html = '';
@@ -249,7 +253,6 @@ function createUnit() {
     return
   }
   else {
-    const flatId = 1
     const status = "active";
     const jwt = localStorage.getItem('token');
 
@@ -261,12 +264,46 @@ function createUnit() {
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify({ name, status, flatId }),
+      data: JSON.stringify({ name, status, flatId:currentFlatId }),
     });
 
     request.done(function (resp) {
       console.log('/admin/unit response: ', resp);
       alert('Unit created');
+      window.location.href = '/app/invoice';
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+      console.log('/admin/unit/ error: ', textStatus);
+    });
+  }
+}
+
+function createFlat() {
+  const name = $("#newFlatName").val();
+
+  if (!name) {
+    alert('Name empty. Please fill');
+    return
+  }
+  else {
+    const jwt = localStorage.getItem('token');
+    const paymentDetails = '0001000'
+
+    request = $.ajax({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+      },
+      url: '/admin/flat',
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({ name, paymentDetails }),
+    });
+
+    request.done(function (resp) {
+      console.log('/admin/flat response: ', resp);
+      alert('Flat created');
       window.location.href = '/app/invoice';
     });
 
