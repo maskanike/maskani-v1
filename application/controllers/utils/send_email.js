@@ -32,13 +32,13 @@ async function sendEmail(req, data) {
 
   const mailgun = new Mailgun({ apiKey: MAILGUN_APIKEY, domain: MAILGUN_DOMAIN }); // TODO create new domain for maskani. Send emails from info@maskani.co.ke
   const email = {
-    from: data.from,
+    from: `${data.name} <${data.from}>`,
     to: data.to,
     subject,
     html,
   }
 
-  mailgun.messages().send(email, async function (err, body) {
+  mailgun.messages().send(email, async function (err) {
     if (err) {
       await req.context.models.Notification.create({
         message: html,
