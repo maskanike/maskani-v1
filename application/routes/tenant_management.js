@@ -27,17 +27,23 @@ router.post('/', auth, attachCurrentUser, async (req, res) => {
   console.log('/tenant POST  request made by user: ', authUser.name);
 
   const { name, email, msisdn, rent, garbage, penalty, water, unitId, flatId } = req.body;
-  const user = await createUser(name, email, msisdn);
-  const tenant = await createTenant(rent,garbage, water,penalty);
-
-  await tenant.setUser(user.id);
-  await tenant.setUnit(unitId);
-  await tenant.setFlat(flatId);
-
-  return res.send(tenant);
+  try {
+    const user = await createUser(name, email, msisdn);
+    const tenant = await createTenant(rent,garbage, water,penalty);
+  
+    await tenant.setUser(user.id);
+    await tenant.setUnit(unitId);
+    await tenant.setFlat(flatId);
+  
+    return res.status(201).send(tenant);
+  } catch (error) {
+    console.log('Error when creating new tenant: ', error);
+    return res.status(400).send(error);
+  }
 });
 
 router.delete('/:tenantId', async (req, res) => {
+  console.log('/tenant DELETE  request made by user: ', authUser.name);
   await models.Tenant.destroy({
     where: {
       id: req.params.tenantId
@@ -47,6 +53,8 @@ router.delete('/:tenantId', async (req, res) => {
 });
 
 router.put('/:tenantId', async (req, res) => {
+  console.log('/tenant DELETE  request made by user: ', authUser.name);
+
   const message = await models.Tenant.update(
     {
       rent:    req.body.rent,
