@@ -56,9 +56,6 @@ describe('Maskani application tests', () => {
         const { response } = error;
 
         assert.equal(response.status, 404);
-        // assert.equal(response.data.code, 404);
-        // assert.equal(response.data.message, 'Page not found');
-        // assert.equal(response.data.name, 'NotFound');
       }
     });
   });

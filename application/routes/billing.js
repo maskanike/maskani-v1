@@ -4,27 +4,28 @@ var router = express.Router();
 import sendEmail from '../controllers/utils/send_email';
 import sendSMS from '../controllers/utils/send_sms';
 import sendSlackNotification from '../controllers/utils/slack_notify';
+import models from '../models';
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
   res.send('Welcome to the Billing API');
 });
 
 router.post('/invoice', async (req, res) => {
   const { rent, water, penalty, garbage, tenantId } = req.body;
   try {
-    const invoice = await req.context.models.Invoice.create({
+    const invoice = await models.Invoice.create({
       rent,
       water,
       penalty,
       garbage,
-      tenantId,
+      TenantId:tenantId,
     });
     const totalRent = rent + water + penalty + garbage;
 
-    await req.context.models.Statement.create({
+    await models.Statement.create({
       amount: totalRent,
       type: 'invoice',
-      tenantId,
+      TenantId:tenantId,
       // TODO keep track of how much a tenant owes.
     });
 
@@ -32,18 +33,20 @@ router.post('/invoice', async (req, res) => {
     const month = date.toLocaleString('en-us', { month: 'short' }); // From: https://stackoverflow.com/a/18648314/1330916
     const year  = date.getFullYear();
 
-    const tenant = await req.context.models.Tenant.findByPk(tenantId);
+    const tenant = await models.Tenant.findByPk(tenantId);
     const user   = await tenant.getUser();
     const flat   = await tenant.getFlat();
     const unit   = await tenant.getUnit();
 
-    const flatUser = await req.context.models.User.findByPk(flat.userId);
+    const flatUser = await models.User.findByPk(flat.UserId);
 
     const sms = `Hello ${user.name.split(' ')[0]}! This is an invoice for ${unit.name} at ${flat.name} for the period ${month} - ${year}.\nTOTAL: ${totalRent}\n` +
       `Sent to your email ${user.email}.`;
     sendSMS(req, user.msisdn, sms);
 
-    // TODO do not attempt to send an email if the user does not have an email address.
+    if (!flatUser.email) {
+      console.log(`User ${flatUser} does not have an email address. Skipping sending email address`)
+    }
     const emailData = {
       to: user.email,
       from: flatUser.email,

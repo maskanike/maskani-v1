@@ -3,13 +3,14 @@ const router = express.Router();
 
 import Login from '../controllers/auth/login'
 import Signup from '../controllers/auth/signup'
+import models from '../models';
 
 router.get('/', function(req, res) {
   res.send('Welcome to the Auth API');
 });
 
 router.post('/user', async (req, res) => {
-  const message = await req.context.models.User.create({
+  const message = await models.User.create({
     email:    req.body.email,
     msisdn:   req.body.msisdn,
     password: req.body.password,
@@ -21,7 +22,7 @@ router.post('/user', async (req, res) => {
 });
 
 router.delete('/:userId', async (req, res) => {
-  await req.context.models.User.destroy({
+  await models.User.destroy({
     where: {
       id: req.params.unitId
     }
@@ -30,7 +31,7 @@ router.delete('/:userId', async (req, res) => {
 });
 
 router.put('/:userId', async (req, res) => {
-  const message = await req.context.models.User.update(
+  const message = await models.User.update(
     {
       email:    req.body.email,
       msisdn:   req.body.msisdn,

@@ -49,19 +49,19 @@ function buildUnitTable(flatId) {
     $('#unitTable').empty();
     if (data != '') {
       $.each(data, function (k, v) {
-        if (v.tenant) {
+        if (v.Tenant) {
           // TODO add a check here to check if invoice was sent this month
           $('#unitTable').append(
-            '<tr id="' + v.id + '"><form class="form1"></form><td>-</td><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.tenant.user.name + '</td>' +
-            '<td><p>' + v.tenant.user.msisdn + '</p><p>' + v.tenant.user.email + '</p></td>' +
-            '<td> <p>Rent: KES ' + v.tenant.rent + '</p><p>Garbage: KES ' + v.tenant.garbage + '</p><p>Water: KES ' + v.tenant.water + '</p><p>Penalty: KES ' + v.tenant.penalty + '</p></td>' +
-            '<td><p> <a data-toggle="modal" data-name="' + v.tenant.user.name + '" data-email="' + v.tenant.user.email + '" ' +
-            'data-msisdn="' + v.tenant.user.msisdn + '" data-rent="' + v.tenant.rent + '" data-garbage="' + v.tenant.garbage + '"' +
-            'data-water="' + v.tenant.water + '" data-penalty="' + v.tenant.penalty + '" data-id="' + v.id +
-            '" data-tenant="' + v.tenant.id + '" data-user="' + v.tenant.user.id + '"' +
+            '<tr id="' + v.id + '"><form class="form1"></form><td>-</td><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.Tenant.User.name + '</td>' +
+            '<td><p>' + v.Tenant.User.msisdn + '</p><p>' + v.Tenant.User.email + '</p></td>' +
+            '<td> <p>Rent: KES ' + v.Tenant.rent + '</p><p>Garbage: KES ' + v.Tenant.garbage + '</p><p>Water: KES ' + v.Tenant.water + '</p><p>Penalty: KES ' + v.Tenant.penalty + '</p></td>' +
+            '<td><p> <a data-toggle="modal" data-name="' + v.Tenant.User.name + '" data-email="' + v.Tenant.User.email + '" ' +
+            'data-msisdn="' + v.Tenant.User.msisdn + '" data-rent="' + v.Tenant.rent + '" data-garbage="' + v.Tenant.garbage + '"' +
+            'data-water="' + v.Tenant.water + '" data-penalty="' + v.Tenant.penalty + '" data-id="' + v.id +
+            '" data-tenant="' + v.Tenant.id + '" data-user="' + v.Tenant.User.id + '"' +
             'data-target="#uAllTenants" href="#nogo">Edit </a></p></td>' +
             '<td><button class="btn btn-block btn-primary"' +
-            ' onclick="sendInvoice(' + v.tenant.id + ',' + v.tenant.rent + ',' + v.tenant.water + ',' + v.tenant.garbage + ',' + v.tenant.penalty + ')">Send Invoice</button></td></tr>)'
+            ' onclick="sendInvoice(' + v.Tenant.id + ',' + v.Tenant.rent + ',' + v.Tenant.water + ',' + v.Tenant.garbage + ',' + v.Tenant.penalty + ')">Send Invoice</button></td></tr>)'
           );
         } else {
           $('#unitTable').append(
@@ -170,8 +170,8 @@ function getFlatTenants(flatId) {
       $('#tenantsWithoutUnits').empty();
       if (data != '') {
         $.each(data, function (k, v) {
-          if (!v.unit) {
-            $('#tenantsWithoutUnits').append('<option value=' + v.id + '>' + v.user.name + ' (' + v.user.email + ')</option>');
+          if (!v.Unit) {
+            $('#tenantsWithoutUnits').append('<option value=' + v.id + '>' + v.User.name + ' (' + v.User.email + ')</option>');
           }
         })
       }

@@ -1,19 +1,13 @@
-const notification = (sequelize, DataTypes) => {
-  const Notification = sequelize.define('notification', {
-    id:          { type:DataTypes.INTEGER, primaryKey:true, autoIncrement:true },
-    message:     { type:DataTypes.JSON, },
-    destination: { type:DataTypes.STRING, },
-    type:        { type:DataTypes.ENUM, values:['email', 'sms'] },
-    error:       { type:DataTypes.JSON, },
-    status:      { type:DataTypes.ENUM, values:['success', 'failed'] },
-  });
-
-  Notification.associate = models => {
+module.exports = (sequelize, DataTypes) => {
+  const Notification = sequelize.define('Notification', {
+    message: DataTypes.JSON,
+    destination: DataTypes.STRING,
+    type: DataTypes.ENUM('email', 'sms'),
+    status: DataTypes.ENUM('success', 'failed'),
+    error: DataTypes.JSON
+  }, {});
+  Notification.associate = function(models) {
     Notification.belongsTo(models.Tenant);
   };
-
-
   return Notification;
 };
-
-export default notification;

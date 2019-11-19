@@ -17,8 +17,6 @@ import models,
     createTenantMagonduWithUnit
   } from './models';
 
-const eraseDatabaseOnSync = process.env.NODE_ENV === 'test'? true:false; // TODO set this to false for all envs when in production
-
 const app = express();
 
 // view engine setup
@@ -30,14 +28,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Add models to context
-app.use((req, res, next) => {
-  req.context = {
-    models,
-  };
-  next();
-});
 
 app.use('/', indexRouter);
 app.use('/billing', billingRouter);
@@ -63,16 +53,8 @@ app.use(function(err, req, res, next) {
 
 var port = normalizePort(process.env.PORT || '3000');
 
-sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
-  if (eraseDatabaseOnSync) {
-    createLandlordWithFlat();
-    createTenantEugeneWithUnit();
-    createTenantMagonduWithUnit();
-  }
-
-  app.listen(port, () => {
-    console.log(`maskani app listening on port ${port}!`)
-  });
+app.listen(port, () => {
+  console.log(`maskani app listening on port ${port}!`)
 });
 
 

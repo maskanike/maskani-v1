@@ -1,6 +1,7 @@
 var Mailgun = require('mailgun-js');
 
 import { EMAIL_HEADER, EMAIL_FOOTER } from './constants';
+import models from '../../models';
 
 const MAILGUN_APIKEY = process.env.MAILGUN_APIKEY;
 const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
@@ -40,7 +41,7 @@ async function sendEmail(req, data) {
 
   mailgun.messages().send(email, async function (err) {
     if (err) {
-      await req.context.models.Notification.create({
+      await models.Notification.create({
         message: html,
         destination: data.to,
         type: 'email',
@@ -50,7 +51,7 @@ async function sendEmail(req, data) {
       console.error('Email sending failed: Subject: ', subject, ' to ', data.to);
     }
     else {
-      await req.context.models.Notification.create({
+      await models.Notification.create({
         message: html,
         destination: data.to,
         type: 'email',

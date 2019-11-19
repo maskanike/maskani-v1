@@ -11,29 +11,28 @@ router.get('/', auth, attachCurrentUser, async (req, res) => {
   const user = req.currentUser;
   console.log('/tenant GET request made by user: ', user.name);
 
-  const flatId = req.query.flatId;
-  if (!flatId) {
-    return res.send('Flat not specified. Add ?flatId=')
+  const FlatId = req.query.flatId;
+  if (!FlatId) {
+    return res.status(400).send('Flat not specified. Add ?flatId=')
   }
   const tenants = await models.Tenant.findAll({ 
-    where: { flatId },
+    where: { FlatId },
     include: [ models.User,  models.Unit ],
   });
   return res.send(tenants);
 });
 
 router.post('/', auth, attachCurrentUser, async (req, res) => {
-  const authUser = req.currentUser;
-  console.log('/tenant POST  request made by user: ', authUser.name);
+  console.log('/tenant POST  request made by user: ', req.currentUser.name);
 
-  const { name, email, msisdn, rent, garbage, penalty, water, unitId, flatId } = req.body;
+  const { name, email, msisdn, rent, garbage, penalty, water, UnitId, FlatId } = req.body;
   try {
     const user = await createUser(name, email, msisdn);
     const tenant = await createTenant(rent,garbage, water,penalty);
   
     await tenant.setUser(user.id);
-    await tenant.setUnit(unitId);
-    await tenant.setFlat(flatId);
+    await tenant.setUnit(UnitId);
+    await tenant.setFlat(FlatId);
   
     return res.status(201).send(tenant);
   } catch (error) {
@@ -42,8 +41,8 @@ router.post('/', auth, attachCurrentUser, async (req, res) => {
   }
 });
 
-router.delete('/:tenantId', async (req, res) => {
-  console.log('/tenant DELETE  request made by user: ', authUser.name);
+router.delete('/:tenantId', auth, attachCurrentUser, async (req, res) => {
+  console.log('/tenant DELETE  request made by user: ', req.currentUser.name);
   await models.Tenant.destroy({
     where: {
       id: req.params.tenantId
@@ -52,17 +51,17 @@ router.delete('/:tenantId', async (req, res) => {
   return res.send(true);
 });
 
-router.put('/:tenantId', async (req, res) => {
-  console.log('/tenant DELETE  request made by user: ', authUser.name);
+router.put('/:tenantId', auth, attachCurrentUser, async (req, res) => {
+  console.log('/tenant PUT  request made by user: ', req.currentUser.name);
 
   const message = await models.Tenant.update(
     {
       rent:    req.body.rent,
       deposit: req.body.deposit,
       balance: req.body.balance,
-      flatId:  req.body.flatId,
-      userId:  req.body.userId,
-      unitId:  req.body.unitId,
+      FlatId:  req.body.flatId,
+      UserId:  req.body.userId,
+      UnitId:  req.body.unitId,
     },
     { returning:true, where:{ id:req.params.tenantId }}
   );

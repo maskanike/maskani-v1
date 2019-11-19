@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+import models from '../../models';
 
 const AT_USERNAME = process.env.AT_USERNAME;
 const AT_APIKEY = process.env.AT_APIKEY;
@@ -27,7 +28,7 @@ async function sendSMS(req, msisdn, message) {
 
   try {
     await rp(options);
-    await req.context.models.Notification.create({
+    await models.Notification.create({
       message,
       destination: msisdn,
       type: 'sms',
@@ -37,7 +38,7 @@ async function sendSMS(req, msisdn, message) {
     console.log('SMS sent successfully: ', message, ' to ', msisdn);
 
   } catch (e) {
-    await req.context.models.Notification.create({
+    await models.Notification.create({
       message,
       destination: msisdn,
       type: 'sms',

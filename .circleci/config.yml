@@ -17,7 +17,10 @@ jobs:
       - PROJECT_NAME: flatspad
       - CLUSTER_NAME: flatspad-k8s-large
       - CLUSTER_ZONE: europe-west1-d
-      - DATABASE_URL: postgres://test:test@localhost:5432/saal_db
+      - TEST_DB_NAME: saal_db
+      - DB_NAME: saal_db
+      - DB_USERNAME: test
+      - DB_PASSWORD: test
       - TERM: xterm
     working_directory: ~/app
     steps:

@@ -7,7 +7,7 @@ const getTokenFromHeader = (req) => {
 }
 
 export default ejwt({
-  secret: 'muNduMweru', // TODO store this an env variable.
+  secret: process.env.AUTH_TOKEN,
   userProperty: 'token',
   getToken: getTokenFromHeader,
 })

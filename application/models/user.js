@@ -1,32 +1,11 @@
-const user = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
-    id:       { type:DataTypes.INTEGER, primaryKey:true, autoIncrement:true },
-    email:    { type:DataTypes.STRING, },// This is not unique. Sometimes tenants do not have email addresses
-    msisdn:   { type:DataTypes.STRING, },
-    password: { type:DataTypes.STRING, },
-    name:     { type:DataTypes.STRING, },
-    status:   { type:DataTypes.ENUM, values:['active', 'pending', 'deleted'] },
-    role:     { type:DataTypes.ENUM, values:['landlord', 'agent', 'tenant'] },
-  });
-  User.associate = models => {
-    User.hasOne(models.Flat);
-  };
-
-  User.findByLogin = async login => {
-    let user = await User.findOne({
-      where: { email: login },
-    });
-
-    if (!user) {
-      user = await User.findOne({
-        where: { email: login },
-      });
-    }
-
-    return user;
-  };
-
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    msisdn: DataTypes.STRING,
+    password: DataTypes.STRING,
+    status: DataTypes.ENUM('active', 'pending', 'deleted'),
+    role: DataTypes.ENUM('landlord', 'agent', 'tenant')
+  }, {});
   return User;
 };
-
-export default user;
