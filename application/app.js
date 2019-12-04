@@ -10,13 +10,6 @@ const authRouter = require('./routes/auth');
 const billingRouter = require('./routes/billing');
 const tenantRouter = require('./routes/tenant_management');
 
-import models, 
-  { sequelize,
-    createLandlordWithFlat,
-    createTenantEugeneWithUnit,
-    createTenantMagonduWithUnit
-  } from './models';
-
 const app = express();
 
 // view engine setup
