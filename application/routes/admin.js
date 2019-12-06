@@ -42,7 +42,6 @@ router.put('/flat/:flatId', auth, attachCurrentUser, async (req, res) => {
 
 
 // Units CRUD REST API
-
 router.get('/unit', auth, attachCurrentUser, async (req, res) => {
   // User has to be authenticated to check their units.
   const FlatId = req.query.flatId;
@@ -66,11 +65,11 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
 });
 
 router.post('/unit', auth, attachCurrentUser, async (req, res) => {
-  // TODO invalidate of flatId is not passed
+  // TODO invalidate if flatId is not passed
   const message = await models.Unit.create({
-    name: req.body.name, status: req.body.status, flatId: req.body.flatId
+    name: req.body.name, status: req.body.status, FlatId: req.body.FlatId
   });
-  return res.send(message);
+  return res.status(201).send(message);
 });
 
 router.delete('/unit/:unitId', auth, attachCurrentUser, async (req, res) => {

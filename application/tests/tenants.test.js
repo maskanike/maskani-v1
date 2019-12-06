@@ -12,20 +12,21 @@ describe('Tenants', () => {
     it('should get all tenant', async () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
-      const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
-      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com" });
+      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com", msisdn: 254723453841 });
       await aTenantExistsWith({
-        rent: 1000, deposit: 100, balance: 0, water: 0, FlatId:flat.id, UserId:user.id, UnitId:unit.id
+        rent: 1000, deposit: 100, balance: 0, water: 0, FlatId:flat.id, UserId:user.id
       });
 
       // expect
       const resp = await request.get(`/tenant?flatId=${flat.id}`).set('Authorization', 'Bearer ' + token).expect(200);
-      console.log('resp: ', resp.body);
 
       // when
       resp.body.should.be.a('array');
       resp.body.length.should.be.eql(1);
       assert.equal(resp.body[0].rent, 1000);
+      assert.equal(resp.body[0].User.name, 'sam');
+      assert.equal(resp.body[0].FlatId, flat.id);
+      assert.equal(resp.body[0].UserId, user.id);
     });
   });
 
@@ -34,8 +35,8 @@ describe('Tenants', () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
       const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
-      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com" });
-      const tenant = { rent: 1000, water: 150, garbage: 100, flatId:flat.id, userId:user.id, unitId: unit.id };
+      const tenant = { rent: 1000, water: 150, garbage: 100, FlatId:flat.id, UnitId: unit.id,
+        name: 'sam', email: "admin@flatspad.com", msisdn: 254723453841 };
 
       // expect
       const resp = await request.post(`/tenant`).set('Authorization', 'Bearer ' + token).send(tenant).expect(201);
@@ -45,6 +46,10 @@ describe('Tenants', () => {
       assert.equal(resp.body.garbage, 100);
       assert.equal(resp.body.rent, 1000);
       assert.equal(resp.body.water, 150);
+      assert.equal(resp.body.FlatId, flat.id);
+
+      const updatedUnit = await findByID('Unit', unit.id);
+      assert.equal(updatedUnit.TenantId, resp.body.id);
     });
   });
 
