@@ -66,10 +66,10 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
 
 router.post('/unit', auth, attachCurrentUser, async (req, res) => {
   // TODO invalidate if flatId is not passed
-  const message = await models.Unit.create({
-    name: req.body.name, status: req.body.status, FlatId: req.body.FlatId
+  const unit = await models.Unit.create({
+    name: req.body.name, status: req.body.status, FlatId: req.body.flatId
   });
-  return res.status(201).send(message);
+  return res.status(201).send(unit);
 });
 
 router.delete('/unit/:unitId', auth, attachCurrentUser, async (req, res) => {

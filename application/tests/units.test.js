@@ -36,6 +36,7 @@ describe('Units', () => {
       // when
       resp.body.should.be.a('object');
       assert.equal(resp.body.name, 'unit 1');
+      assert.equal(resp.body.FlatId, flat.id);
     });
   });
 
