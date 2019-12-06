@@ -25,14 +25,14 @@ router.get('/', auth, attachCurrentUser, async (req, res) => {
 router.post('/', auth, attachCurrentUser, async (req, res) => {
   console.log('/tenant POST  request made by user: ', req.currentUser.name);
 
-  const { name, email, msisdn, rent, garbage, penalty, water, UnitId, FlatId } = req.body;
+  const { name, email, msisdn, rent, garbage, penalty, water, unitId, flatId } = req.body;
   try {
     const user = await createUser(name, email, msisdn);
     const tenant = await createTenant(rent,garbage, water,penalty);
   
     await tenant.setUser(user.id);
-    await tenant.setUnit(UnitId);
-    await tenant.setFlat(FlatId);
+    await tenant.setUnit(unitId);
+    await tenant.setFlat(flatId);
   
     return res.status(201).send(tenant);
   } catch (error) {
@@ -103,21 +103,21 @@ router.post('/ui/unit/assign', async (req, res) => {
 });
 
 
-async function makeUnitVacant(tenantId) {
+async function makeUnitVacant(TenantId) {
   await models.Unit.update(
-    { tenantId: null },
-    { returning: true, where: { tenantId }}
+    { TenantId: null },
+    { returning: true, where: { TenantId }}
   );
-  console.log(`Unit for tenant ${tenantId} made vacant`);
+  console.log(`Unit for tenant ${TenantId} made vacant`);
 }
 
 // TODO move this logic into controllers
-async function addTenantToUnit(unitId, tenantId) {
+async function addTenantToUnit(unitId, TenantId) {
   await models.Unit.update(
-    { tenantId },
+    { TenantId },
     { returning: true, where: { id:unitId }}
   );
-  console.log(`Unit ${unitId} now occupied by tenant ${tenantId}`);
+  console.log(`Unit ${unitId} now occupied by tenant ${TenantId}`);
 }
 
 async function createUser(name, email, msisdn){
