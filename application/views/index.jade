@@ -24,7 +24,7 @@ block content
             .home_banner_cta_wrapper
               h4(class="titleA") Free for basic use
               .home_banner_signup_form
-                form#signupForm(class="homeSignup formA" method='POST' action='/auth/signup')
+                form#signupForm1(class="homeSignup formA" method='POST' action='/auth/signup')
                   .form-group
                     label(for="fullName" placeholder="Full Name") Full Name
                     input(type="text" class="form-control" id="signupName" placeholder="" required autofocus)
@@ -33,7 +33,7 @@ block content
                     input(type="email" class="form-control" id="signupEmail" placeholder="" required)
                   .form-group
                     label(for="phoneNumber" placeholder="Phone Number") Phone Number
-                    input(type="text" class="form-control" id="signupPhone" placeholder="" required)
+                    input(type="number" class="form-control" id="signupPhone" placeholder="" required)
                   .form-group
                     label(for="Password" placeholder="Password") Password
                     input(type="password" class="form-control" id="signupPass1" placeholder="" required)

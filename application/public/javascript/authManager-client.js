@@ -1,6 +1,7 @@
 $(function () {
   login();
-  signup();
+  submitSignupForm1();
+  submitSignupForm2();
 })
 
 function login() {
@@ -9,7 +10,7 @@ function login() {
     $.ajax({
       method: 'POST',
       url: '/auth/login',
-      headers: { 'Content-Type':'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       data,
       success: function (result) {
         // store result in local in local storage
@@ -36,37 +37,53 @@ function logout() {
   window.location.href = '/';
 }
 
-function signup() {
-  $('#signupForm').submit(function () {
-    const data = JSON.stringify({ 
-      "email":     $('#signupEmail').val(),
-      "msisdn":    $('#signupPhone').val(),
-      "name":      $('#signupName').val(),
+function submitSignupForm1() {
+  $('#signupForm1').submit(function () {
+    const data = JSON.stringify({
+      "email": $('#signupEmail').val(),
+      "msisdn": $('#signupPhone').val(),
+      "name": $('#signupName').val(),
       "password1": $('#signupPass1').val(),
       "password2": $('#signupPass2').val()
     });
-
-    $.ajax({
-      method: 'POST',
-      url: '/auth/signup',
-      headers: { 'Content-Type':'application/json' },
-      data,
-      success: function (result) {
-        // store result in local in local storage
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('name', result.user.name);
-        localStorage.setItem('email', result.user.email);
-
-        // Redirect to dashboard
-        window.location.href = '/app/dashboard';
-      },
-      error: function (xhr, ajaxOptions, thrownError) {
-        console.log(xhr.status);
-        console.log(thrownError);
-        alert("Error happened: " + xhr.responseText);
-      }
-    });
-
-    return false;
+    signup(data);
   });
+}
+
+function submitSignupForm2() {
+  $('#signupForm2').submit(function () {
+    const data = JSON.stringify({
+      "email": $('#signupEmail2').val(),
+      "msisdn": $('#signupPhone2').val(),
+      "name": $('#signupName2').val(),
+      "password1": $('#signup2Pass1').val(),
+      "password2": $('#signup2Pass2').val()
+    });
+    signup(data);
+  });
+}
+
+function signup(data) {
+  $.ajax({
+    method: 'POST',
+    url: '/auth/signup',
+    headers: { 'Content-Type': 'application/json' },
+    data,
+    success: function (result) {
+      // store result in local in local storage
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('name', result.user.name);
+      localStorage.setItem('email', result.user.email);
+
+      // Redirect to dashboard
+      window.location.href = '/app/dashboard';
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log(xhr.status);
+      console.log(thrownError);
+      alert("Error happened: " + xhr.responseText);
+    }
+  });
+
+  return false;
 }
