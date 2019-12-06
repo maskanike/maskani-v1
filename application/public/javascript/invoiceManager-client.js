@@ -7,6 +7,7 @@ $(function () {
   populateEditTenantModal();
   toggleUnitDropDownIfTenantChanged();
   getUnitIdFromOpenModal();
+  setCurrentMonthToDropDown();
 })
 
 function getFlats() {
@@ -323,6 +324,12 @@ function toggleUnitDropDownIfTenantChanged() {
       $("#inputUnit").prop('disabled', false);
     }
   });
+}
+
+function setCurrentMonthToDropDown() {
+  var d = new Date();
+  var n = d.getMonth();
+  $("#months option[value=" + n+ "]").attr('selected', 'selected'); 
 }
 
 var helpers = {

@@ -12,7 +12,6 @@ block appSidebar
 
 block appMain
   script(src='/javascript/invoiceManager-client.js')
-
   h1.main_title Invoice Tenants
   ul.list-inline.dropA
 
@@ -28,20 +27,20 @@ block appMain
       //3.main_sub_title September 2019
         span.property_title
 
-      .dropdown
-        button(class="btn btn-light dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false" ) October
-        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")
-          a(class="dropdown-item", href="#nogo") September
-          a(class="dropdown-item", href="#nogo") August
-          a(class="dropdown-item", href="#nogo") July
-          a(class="dropdown-item", href="#nogo") June
-          a(class="dropdown-item", href="#nogo") May
-          a(class="dropdown-item", href="#nogo") April
-          a(class="dropdown-item", href="#nogo") March
-          a(class="dropdown-item", href="#nogo") February
-          a(class="dropdown-item", href="#nogo") January
-          a(class="dropdown-item", href="#nogo") December
-          a(class="dropdown-item", href="#nogo") November
+    li.list-inline-item
+        select#months.form-control
+          option(value=0)  January
+          option(value=1)  Febuary
+          option(value=2)  March
+          option(value=3)  April
+          option(value=4)  May
+          option(value=5)  June
+          option(value=6)  July
+          option(value=7)  August
+          option(value=8)  September
+          option(value=9)  October
+          option(value=10)  November
+          option(value=11)  December
 
     li.list-inline-item.propertyDrop
       .dropdown#defaultFlat
