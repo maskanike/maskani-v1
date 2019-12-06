@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 import models from '../models';
-
 import auth from '../middlewares/auth';
 import attachCurrentUser from '../middlewares/attachCurrentUser';
 
@@ -28,7 +27,7 @@ router.post('/', auth, attachCurrentUser, async (req, res) => {
   const { name, email, msisdn, rent, garbage, penalty, water, unitId, flatId } = req.body;
   try {
     const user = await createUser(name, email, msisdn);
-    const tenant = await createTenant(rent,garbage, water,penalty);
+    const tenant = await createTenant(rent, garbage, water, penalty);
   
     await tenant.setUser(user.id);
     await tenant.setUnit(unitId);
