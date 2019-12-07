@@ -11,6 +11,7 @@ block appSidebar
   // p Invoice Tenants
 
 block appMain
+  script(src="https://momentjs.com/downloads/moment.min.js")
   script(src='/javascript/invoiceManager-client.js')
   h1.main_title Invoice Tenants
   ul.list-inline.dropA
@@ -73,13 +74,13 @@ block appMain
         table.table.table-hover.t-1
           thead
             tr
-              th(scope='col', class='tSelect') 
+              //- th(scope='col', class='tSelect') 
               th(scope='col', class='tUnit') Unit
               th(scope='col', class='tName') Name
               th(scope='col', class='tContacts') Contacts
               th(scope='col', class='tFinancials') Financials
               //- th(scope='col', class='t') Invoice Status          
-              th(scope='col', class='t') Edit          
+              th(scope='col', class='t') Last Invoice Sent          
               th(scope='col', class='t') Action
           tbody#unitTable         
 

@@ -12,7 +12,7 @@ $(function () {
 
 function getFlats() {
   const jwt = localStorage.getItem('token');
-  $.ajax({ 
+  $.ajax({
     url: '/admin/flat/',
     beforeSend: function (xhr) {
       xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
@@ -41,7 +41,7 @@ function getFlats() {
 
 function buildUnitTable(flatId) {
   const jwt = localStorage.getItem('token');
-  $.ajax({ 
+  $.ajax({
     url: '/admin/unit/?flatId=' + flatId,
     beforeSend: function (xhr) {
       xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
@@ -51,22 +51,33 @@ function buildUnitTable(flatId) {
     if (data != '') {
       $.each(data, function (k, v) {
         if (v.Tenant) {
-          // TODO add a check here to check if invoice was sent this month
+          const lastInvoiceDetails = getLastInvoiceDate(v.Tenant.Invoices);
+          let invoiceString;
+          let rowFormat = 'table-warning';
+          if (lastInvoiceDetails) {
+            invoiceString = '<p> Date: ' + lastInvoiceDetails.date + '</p><p> Total: ' + lastInvoiceDetails.amount + '</p>'
+            if (helpers.checkIfInvoiceSentThisMonth(lastInvoiceDetails.date)) {
+              rowFormat = 'table-success';
+            }
+          } else {
+            invoiceString = '-'
+          }
+      
           $('#unitTable').append(
-            '<tr id="' + v.id + '"><form class="form1"></form><td>-</td><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.Tenant.User.name + '</td>' +
-            '<td><p>' + v.Tenant.User.msisdn + '</p><p>' + v.Tenant.User.email + '</p></td>' +
-            '<td> <p>Rent: KES ' + v.Tenant.rent + '</p><p>Garbage: KES ' + v.Tenant.garbage + '</p><p>Water: KES ' + v.Tenant.water + '</p><p>Penalty: KES ' + v.Tenant.penalty + '</p></td>' +
-            '<td><p> <a data-toggle="modal" data-name="' + v.Tenant.User.name + '" data-email="' + v.Tenant.User.email + '" ' +
+            '<tr class="'+ rowFormat +' id="' + v.id + '"><form class="form1"></form><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.Tenant.User.name + '</td>' +
+            '<td><p>' + v.Tenant.User.msisdn + '</p><p>' + v.Tenant.User.email + '</p><p> <a data-toggle="modal" data-name="' + v.Tenant.User.name + '" data-email="' + v.Tenant.User.email + '" ' +
             'data-msisdn="' + v.Tenant.User.msisdn + '" data-rent="' + v.Tenant.rent + '" data-garbage="' + v.Tenant.garbage + '"' +
             'data-water="' + v.Tenant.water + '" data-penalty="' + v.Tenant.penalty + '" data-id="' + v.id +
             '" data-tenant="' + v.Tenant.id + '" data-user="' + v.Tenant.User.id + '"' +
             'data-target="#uAllTenants" href="#nogo">Edit </a></p></td>' +
+            '<td> <p>Rent: KES ' + v.Tenant.rent + '</p><p>Garbage: KES ' + v.Tenant.garbage + '</p><p>Water: KES ' + v.Tenant.water + '</p><p>Penalty: KES ' + v.Tenant.penalty + '</p></td>' +
+            '<td>' + invoiceString + '</td>' +
             '<td><button class="btn btn-block btn-primary"' +
             ' onclick="sendInvoice(' + v.Tenant.id + ',' + v.Tenant.rent + ',' + v.Tenant.water + ',' + v.Tenant.garbage + ',' + v.Tenant.penalty + ')">Send Invoice</button></td></tr>)'
           );
         } else {
           $('#unitTable').append(
-            '<tr id="' + v.id + '"><td>-</td><th scope="row">' + v.name + '</th><td colspan="4">Unoccupied</td><td scope="row"><button class="btn btn-block btn-info", data-toggle="modal", data-target="#uAddTenant" data-unit="' + v.id + '">Add Tenant</button></td></tr>'
+            '<tr id="' + v.id + '"><th scope="row">' + v.name + '</th><td colspan="4">Unoccupied</td><td scope="row"><button class="btn btn-block btn-info", data-toggle="modal", data-target="#uAddTenant" data-unit="' + v.id + '">Add Tenant</button></td></tr>'
           );
           $('#inputUnit').append(
             '<option value=' + v.id + '>' + v.name + '</option>'
@@ -265,7 +276,7 @@ function createUnit() {
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify({ name, status, flatId:currentFlatId }),
+      data: JSON.stringify({ name, status, flatId: currentFlatId }),
     });
 
     request.done(function (resp) {
@@ -329,7 +340,21 @@ function toggleUnitDropDownIfTenantChanged() {
 function setCurrentMonthToDropDown() {
   var d = new Date();
   var n = d.getMonth();
-  $("#months option[value=" + n+ "]").attr('selected', 'selected'); 
+  $("#months option[value=" + n + "]").attr('selected', 'selected');
+}
+
+function getLastInvoiceDate(invoices) {
+  if (!invoices) {
+    return null
+  }
+  const lastInvoice = invoices.pop();
+
+  if (!lastInvoice) {
+    return null;
+  }
+  const date = moment(lastInvoice.createdAt).format('YYYY-MM-DD');
+  const amount = lastInvoice.rent + lastInvoice.water + lastInvoice.garbage + lastInvoice.penalty;
+  return { date, amount };
 }
 
 var helpers = {
@@ -340,5 +365,17 @@ var helpers = {
         dropdown.append('<a href="#nogo" class="dropdown-item">' + v.name + '</a>');
       });
     }
+  },
+
+  checkIfInvoiceSentThisMonth: function (date) {
+    if (!date) {
+      return false;
+    }
+    const today = moment();
+    const invoiceDate = moment(date);
+    if ((today.month() === invoiceDate.month()) && (today.year() === invoiceDate.year())) {
+      return true;
+    }
+    return false;
   }
 }
