@@ -340,7 +340,7 @@ function toggleUnitDropDownIfTenantChanged() {
 function setCurrentMonthToDropDown() {
   var d = new Date();
   var n = d.getMonth();
-  $("#months option[value=" + n + "]").attr('selected', 'selected');
+  $("#months option[value=" + n + "]").prop('selected', true);
 }
 
 function getLastInvoiceDate(invoices) {
