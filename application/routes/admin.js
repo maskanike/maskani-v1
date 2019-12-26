@@ -65,7 +65,7 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
 
   const units = await models.Unit.
     findAll({
-      where: { FlatId },
+      where: { FlatId:flatId },
       include: [
         {
           model: models.Tenant,
