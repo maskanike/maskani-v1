@@ -11,14 +11,12 @@ async function sendSlackNotification(channel, message) {
   if (process.env.NODE_ENV === 'test') {
     console.log('In test env. Ignore slack notification')
   }
-  console.log
 
   const channelUri = channels[channel];
   if (!channelUri) {
     console.error('channel not configured');
     return;
   }
-  console.log('process.env: ', process.env[channelUri], ' channelUri: ', channelUri);
   const uri = process.env[channelUri];
   const options = {
     uri,

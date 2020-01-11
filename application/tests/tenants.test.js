@@ -8,6 +8,7 @@ describe('Tenants', () => {
     await truncateModel('Tenant');
     await truncateModel('Flat');
   });
+  
   describe('GET /tenant', () => {
     it('should get all tenant', async () => {
       // given
@@ -34,7 +35,7 @@ describe('Tenants', () => {
     it('should create a new tenant', async () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
-      const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
+      const unit = await aUnitExistsWith({ name: 'unit 1', FlatId: flat.id });
       const tenant = { rent: 1000, water: 150, garbage: 100, flatId:flat.id, unitId: unit.id,
         name: 'sam', email: "admin@flatspad.com", msisdn: 254723453841 };
 

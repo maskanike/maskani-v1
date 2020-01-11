@@ -5,7 +5,7 @@ metadata:
   namespace: staging
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/from-to-www-redirect: "true"
 spec:

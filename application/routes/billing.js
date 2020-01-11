@@ -1,42 +1,84 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
 
+import auth from '../middlewares/auth';
+import attachCurrentUser from '../middlewares/attachCurrentUser';
+import models from '../models';
 import sendEmail from '../controllers/utils/send_email';
 import sendSMS from '../controllers/utils/send_sms';
 import sendSlackNotification from '../controllers/utils/slack_notify';
-import models from '../models';
+import { inverse } from 'ansi-colors';
+const Op = models.Sequelize.Op;
 
 router.get('/', function (req, res) {
   res.send('Welcome to the Billing API');
 });
 
-router.post('/invoice', async (req, res) => {
+// TODO out in auth 'auth, attachCurrentUser;'
+router.get('/invoice', async (req, res) => {
+  const today = moment();
+  const date = req.query.month || `${today.getUTCFullYear()}-${today.getMonth()}`; // Date Format yyyy-mm
+  const initDate = moment(date).format();
+  const endDate = moment(date).add(1, 'month').format();
+  const FlatId = req.query.flatId;
+
+  const invoices = await models.Invoice.findAll({
+    where: {
+      // FlatId, 
+      createdAt: {
+        [Op.between]: [initDate, endDate]
+      }
+    },
+    include: {
+      model: models.Unit,
+      where: {
+        FlatId
+      }
+    }
+  });
+
+  const units = await models.Unit.findAll({ where: { FlatId }});
+  
+  const resp = units.map((unit) => {
+    const invoice = invoices.find(invoice => invoice.Unit.id === unit.id);
+    if (invoice) {
+      return invoice
+    };
+    return { invoice: null, UnitId: unit.id, Unit: unit };
+  });
+  return res.send(resp);
+});
+
+
+router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
   const { rent, water, penalty, garbage, tenantId } = req.body;
   try {
+    const tenant = await models.Tenant.findByPk(tenantId);
+    const unit = await tenant.getUnit();
+    const user = await tenant.getUser();
+    const flat = await tenant.getFlat();
+
     const invoice = await models.Invoice.create({
       rent,
       water,
       penalty,
       garbage,
-      TenantId:tenantId,
+      TenantId: tenantId,
+      UnitId: unit.id
     });
     const totalRent = rent + water + penalty + garbage;
 
     await models.Statement.create({
       amount: totalRent,
       type: 'invoice',
-      TenantId:tenantId,
+      TenantId: tenantId,
       // TODO keep track of how much a tenant owes.
     });
 
-    const date  = new Date();
+    const date = new Date();
     const month = date.toLocaleString('en-us', { month: 'short' }); // From: https://stackoverflow.com/a/18648314/1330916
-    const year  = date.getFullYear();
-
-    const tenant = await models.Tenant.findByPk(tenantId);
-    const user   = await tenant.getUser();
-    const flat   = await tenant.getFlat();
-    const unit   = await tenant.getUnit();
+    const year = date.getFullYear();
 
     const flatUser = await models.User.findByPk(flat.UserId);
 
@@ -44,31 +86,32 @@ router.post('/invoice', async (req, res) => {
       `Sent to your email ${user.email}.`;
     sendSMS(req, user.msisdn, sms);
 
-    if (!flatUser.email) {
-      console.log(`User ${flatUser} does not have an email address. Skipping sending email address`)
-    }
-    const emailData = {
-      to: user.email,
-      from: flatUser.email,
-      name: flatUser.name,
-      flat: flat.name,
-      unit: unit.name,
-      month,
-      year,
-      totalRent,
-      rent,
-      water,
-      penalty,
-      garbage,
-    }
-    sendEmail(req, emailData);
-
     sendSlackNotification(
       '#invoices',
       `Invoice sent to ${user.name} for ${unit.name} at ${flat.name} for the period ${month} - ${year} of amount ${totalRent}`,
     );
 
-    return res.send(invoice);
+    if (flatUser && flatUser.email) {
+      const emailData = {
+        to: user.email,
+        from: flatUser.email,
+        name: flatUser.name,
+        flat: flat.name,
+        unit: unit.name,
+        month,
+        year,
+        totalRent,
+        rent,
+        water,
+        penalty,
+        garbage,
+      }
+      sendEmail(req, emailData);
+    } else {
+      console.log(`User ${flatUser} does not have an email address. Skipping sending email address`);
+    }
+
+    return res.status(201).send(invoice);
 
   } catch (error) {
     console.error('error happened: ', error);
@@ -80,7 +123,7 @@ router.post('/invoice', async (req, res) => {
       await sendSlackNotification('#staging-errors', JSON.stringify(error));
     }
   }
-  return res.send('An error occurred');
+  return res.status(400).send(`An error occurred ${error}`);
 });
 
 module.exports = router;

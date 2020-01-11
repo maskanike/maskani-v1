@@ -5,7 +5,7 @@ block vars
   //- - var activeClass = 'active';
 
 block menu
-  include ../menus/logged_in.jade
+  include ../menus/logged_in.pug
  
 block appSidebar
   // p Invoice Tenants
@@ -15,33 +15,25 @@ block appMain
   script(src='/javascript/invoiceManager-client.js')
   h1.main_title Invoice Tenants
   ul.list-inline.dropA
-
     li.list-inline-item
-      .dropdown
-        button(class="btn btn-light dropdown-toggle", type="button" id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false" ) 2019
-        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")
-          a(class="dropdown-item", href="#nogo") 2020
-          //- a(class="dropdown-item", href="#nogo") 2017
-          //- a(class="dropdown-item", href="#nogo") 2016
-
-    li.list-inline-item
-      //3.main_sub_title September 2019
-        span.property_title
+        select#year.form-control
+          option(value=2019)  2019
+          option(value=2020)  2020
 
     li.list-inline-item
         select#months.form-control
-          option(value=0)  January
-          option(value=1)  Febuary
-          option(value=2)  March
-          option(value=3)  April
-          option(value=4)  May
-          option(value=5)  June
-          option(value=6)  July
-          option(value=7)  August
-          option(value=8)  September
-          option(value=9)  October
-          option(value=10)  November
-          option(value=11)  December
+          option(value=1)  January
+          option(value=2)  Febuary
+          option(value=3)  March
+          option(value=4)  April
+          option(value=5)  May
+          option(value=6)  June
+          option(value=7)  July
+          option(value=8)  August
+          option(value=9)  September
+          option(value=10)  October
+          option(value=11)  November
+          option(value=12)  December
 
     li.list-inline-item.propertyDrop
       .dropdown#defaultFlat
@@ -292,7 +284,7 @@ block appMain
                               .form-group.col-md-6
                                 label(for='newTenantName') Full Name
                                 |       
-                                input#newTenantName.form-control(type='text', placeholder='Full Name')
+                                input#newTenantName.form-control(type='text', placeholder='Full Name', required)
                               |     
                               .form-group.col-md-6
                                 label(for='newTenantEmail') Email Address
@@ -303,7 +295,7 @@ block appMain
                               .form-group.col-md-6
                                 label(for='newTenantPhone') Phone Number
                                 |       
-                                input#newTenantPhone.form-control(type='text', placeholder='Phone Number')
+                                input#newTenantPhone.form-control(type='text', placeholder='Phone Number', required)
                               |     
                             p
                               strong Financials
@@ -314,7 +306,7 @@ block appMain
                                   .input-group-prepend
                                     .input-group-text#basic-addon1 KES
                                   |     
-                                  input#newTenantRent.form-control(type='text', placeholder='000')                  
+                                  input#newTenantRent.form-control(type='text', placeholder='000', required)                  
                               .form-group.col-md-6                      
                                 label(for='newTenantRent') Garbage
                                 .input-group
@@ -400,6 +392,7 @@ block appMain
               th(scope='col', class='tName') Name
               th(scope='col', class='tContacts') Contacts 
               th(scope='col', class='tFinancials') Financials
+              th(scope='col', class='tDate') Date
           tbody#unitTable         
 
     .main_not_sent.tab-pane(role="tabpanel" aria-labelledby="not_sent-tab" id="main_not_sent")

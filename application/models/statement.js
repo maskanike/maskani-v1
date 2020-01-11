@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Statement.associate = function(models) {
     Statement.belongsTo(models.Tenant);
+    Statement.belongsTo(models.Unit);
   };
   return Statement;
 };

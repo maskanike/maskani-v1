@@ -1,13 +1,13 @@
 extends ../layout
 block vars
-  - var bodyClass = 'page page-pricing';
+  - var bodyClass = 'page page-contact';
   - var activeClass = 'active';
 
 block menu
-  include ../menus/logged_out.jade
-    
+  include ../menus/logged_out.pug
+   
 block content
   .page_wrapper.container-fluid
     .container
       //- h1.text-center Signup page #{user}
-      h1.text-center Pricing
+      h1.text-center Contact Us

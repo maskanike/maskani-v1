@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Invoice.associate = function(models) {
     Invoice.belongsTo(models.Tenant);
+    Invoice.belongsTo(models.Unit);
   };
   return Invoice;
 };

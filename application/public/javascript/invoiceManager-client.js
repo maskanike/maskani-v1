@@ -8,6 +8,8 @@ $(function () {
   toggleUnitDropDownIfTenantChanged();
   getUnitIdFromOpenModal();
   setCurrentMonthToDropDown();
+  getSelectedMonth();
+  getSelectedYear();
 })
 
 function getFlats() {
@@ -62,9 +64,9 @@ function buildUnitTable(flatId) {
           } else {
             invoiceString = '-'
           }
-      
+
           $('#unitTable').append(
-            '<tr class="'+ rowFormat +' id="' + v.id + '"><form class="form1"></form><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.Tenant.User.name + '</td>' +
+            '<tr class="' + rowFormat + ' id="' + v.id + '"><form class="form1"></form><th scope="row">' + v.name + '</th><td data-id="tenantName">' + v.Tenant.User.name + '</td>' +
             '<td><p>' + v.Tenant.User.msisdn + '</p><p>' + v.Tenant.User.email + '</p><p> <a data-toggle="modal" data-name="' + v.Tenant.User.name + '" data-email="' + v.Tenant.User.email + '" ' +
             'data-msisdn="' + v.Tenant.User.msisdn + '" data-rent="' + v.Tenant.rent + '" data-garbage="' + v.Tenant.garbage + '"' +
             'data-water="' + v.Tenant.water + '" data-penalty="' + v.Tenant.penalty + '" data-id="' + v.id +
@@ -106,6 +108,7 @@ function sendInvoice(tenantId, rent, water, garbage, penalty) {
   request.done(function (resp) {
     console.log('/billing/invoice response: ', resp);
     alert('Invoice sent');
+    window.location.href = '/app/invoice';
     // TODO remove unit from table list. Or change row color
   });
 
@@ -140,6 +143,16 @@ function populateEditTenantModal() {
 
 function submitEditTenantForm() {
   const tenantId = tenantDataToEdit['tenantId']
+
+  if (helpers.validateIsStringEmpty($("#inputName").val()) ) {
+    alert("ERROR! Name is empty. Please fill.");
+    return;
+  }
+
+  if (helpers.validateIsStringEmpty($("#inputPhone").val()) ) {
+    alert("ERROR! Phone number is empty. Please fill.");
+    return;
+  }
 
   tenantDataToEdit["name"] = $("#inputName").val();
   tenantDataToEdit["email"] = $("#inputEmail").val();
@@ -219,6 +232,16 @@ function submitAssignTenantToUnitForm() {
 
 function submitCreateNewTenantForUnitForm() {
   const newTenant = {};
+
+  if (helpers.validateIsStringEmpty($("#newTenantName").val()) ) {
+    alert("ERROR! Name is empty. Please fill.");
+    return;
+  }
+
+  if (helpers.validateIsStringEmpty($("#newTenantPhone").val()) ) {
+    alert("ERROR! Phone number is empty. Please fill.");
+    return;
+  }
 
   newTenant["name"] = $("#newTenantName").val();
   newTenant["email"] = $("#newTenantEmail").val() ;
@@ -357,6 +380,18 @@ function getLastInvoiceDate(invoices) {
   return { date, amount };
 }
 
+function getSelectedMonth() {
+  $("#months").on("change", function () {
+    console.log('in drop down', $(this).val());
+  });
+}
+
+function getSelectedYear() {
+  $("#year").on("change", function () {
+    console.log('in year drop down', $(this).val());
+  });
+}
+
 var helpers = {
   buildDropdown: function (result, dropdown) {
     dropdown.html('');
@@ -377,5 +412,11 @@ var helpers = {
       return true;
     }
     return false;
+  }, 
+  validateIsStringEmpty: function (item) {
+    if (item === ''){
+      return true;
+    }
+    return false
   }
 }
