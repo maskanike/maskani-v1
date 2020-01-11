@@ -143,10 +143,10 @@ function submitEditTenantForm() {
 
   tenantDataToEdit["name"] = $("#inputName").val();
   tenantDataToEdit["email"] = $("#inputEmail").val();
-  tenantDataToEdit["rent"] = $("#inputRent").val();
-  tenantDataToEdit["garbage"] = $("#inputGarbage").val();
-  tenantDataToEdit["water"] = $("#inputWater").val();
-  tenantDataToEdit["penalty"] = $("#inputPenalty").val();
+  tenantDataToEdit["rent"] = $("#inputRent").val() || 0;
+  tenantDataToEdit["garbage"] = $("#inputGarbage").val() || 0;
+  tenantDataToEdit["water"] = $("#inputWater").val() || 0;
+  tenantDataToEdit["penalty"] = $("#inputPenalty").val() || 0;
   tenantDataToEdit["status"] = $("#inputStatus").val();
   tenantDataToEdit["msisdn"] = $("#inputPhone").val();
   tenantDataToEdit["unitId"] = $("#inputUnit").val();
@@ -221,12 +221,12 @@ function submitCreateNewTenantForUnitForm() {
   const newTenant = {};
 
   newTenant["name"] = $("#newTenantName").val();
-  newTenant["email"] = $("#newTenantEmail").val();
+  newTenant["email"] = $("#newTenantEmail").val() ;
   newTenant["msisdn"] = $("#newTenantPhone").val();
-  newTenant["rent"] = $("#newTenantRent").val();
-  newTenant["garbage"] = $("#newTenantGarbage").val();
-  newTenant["water"] = $("#newTenantWater").val();
-  newTenant["penalty"] = $("#newTenantPenalty").val();
+  newTenant["rent"] = $("#newTenantRent").val() || 0;
+  newTenant["garbage"] = $("#newTenantGarbage").val() || 0;
+  newTenant["water"] = $("#newTenantWater").val() || 0;
+  newTenant["penalty"] = $("#newTenantPenalty").val() || 0;
   newTenant["unitId"] = unitToAddTenant;
   newTenant["flatId"] = currentFlatId;
 
