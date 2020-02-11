@@ -14,11 +14,11 @@ async function sendEmail(req, data) {
 
   const subject = `Your Invoice for ${data.month} - ${data.year} | ${data.flat}`;
 
-  const html = EMAIL_HEADER + // TODO change header to refer to maskani and not flatspad logos
+  const html = EMAIL_HEADER + 
     `<p style="margin-bottom: 25px;">Dear ${data.name},</p>` +
     `<p style="margin-bottom: 25px;">Thank you for being a tenant at <b> ${data.flat} </b> unit  <b> ${data.unit}</b>. ` +
     `Your invoice for ${data.month} ${data.year} is ready.</p>` +
-    `<p style="margin-bottom: 25px;">Please pay <b> ${data.totalRent} KSHS</b> before 5th of ${data.month} ${data.year} .</p> ` +
+    `<p style="margin-bottom: 25px;">Please pay <b> ${data.totalRent} KSHS</b> before 5th  ${data.month} ${data.year} .</p> ` +
     `<p style="margin-bottom: 25px;">Your rental breakdown is as follows:</p>` +
     `<ul class="list-group list-group-flush"></ul>` +
     `<li class="list-group-item">Rent Due: <a style="color: #28AFB0; word-wrap: break-word;"> ${data.rent} </a></li>` +
@@ -31,7 +31,7 @@ async function sendEmail(req, data) {
     `<p style="margin-top: 2px;">The Maskani Team</p>` +
     EMAIL_FOOTER;
 
-  const mailgun = new Mailgun({ apiKey: MAILGUN_APIKEY, domain: MAILGUN_DOMAIN }); // TODO create new domain for maskani. Send emails from info@maskani.co.ke
+  const mailgun = new Mailgun({ apiKey: MAILGUN_APIKEY, domain: MAILGUN_DOMAIN });
   const email = {
     from: `${data.name} <${data.from}>`,
     to: data.to,
