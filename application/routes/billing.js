@@ -8,7 +8,6 @@ import models from '../models';
 import sendEmail from '../controllers/utils/send_email';
 import sendSMS from '../controllers/utils/send_sms';
 import sendSlackNotification from '../controllers/utils/slack_notify';
-import { inverse } from 'ansi-colors';
 const Op = models.Sequelize.Op;
 
 router.get('/', function (req, res) {
@@ -18,7 +17,7 @@ router.get('/', function (req, res) {
 // TODO out in auth 'auth, attachCurrentUser;'
 router.get('/invoice', async (req, res) => {
   const today = moment();
-  const date = req.query.month || `${today.getUTCFullYear()}-${today.getMonth()}`; // Date Format yyyy-mm
+  const date = req.query.month || today.format('YYYY-MM');
   const initDate = moment(date).format();
   const endDate = moment(date).add(1, 'month').format();
   const FlatId = req.query.flatId;
@@ -30,12 +29,9 @@ router.get('/invoice', async (req, res) => {
         [Op.between]: [initDate, endDate]
       }
     },
-    include: {
-      model: models.Unit,
-      where: {
-        FlatId
-      }
-    }
+    include: [
+      models.Unit,
+      { model: models.Tenant, include: models.User }]
   });
 
   const units = await models.Unit.findAll({ where: { FlatId }});

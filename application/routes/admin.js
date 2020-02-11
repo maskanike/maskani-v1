@@ -10,7 +10,6 @@ router.get('/', function (req, res) {
 });
 
 // Flats CRUD REST API
-
 router.get('/flat', auth, attachCurrentUser, async (req, res) => {
   console.log('/flat GET  request made by user: ', req.currentUser.name);
 
@@ -69,10 +68,11 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
       include: [
         {
           model: models.Tenant,
-          include: [models.User, models.Invoice]
+          include: [models.User, models.Invoice],
         }],
       order: [
         ['name', 'DESC'],
+        [models.Tenant, models.Invoice, 'createdAt', 'desc'],
       ],
     });
   

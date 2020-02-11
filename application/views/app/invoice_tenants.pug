@@ -22,18 +22,18 @@ block appMain
 
     li.list-inline-item
         select#months.form-control
-          option(value=1)  January
-          option(value=2)  Febuary
-          option(value=3)  March
-          option(value=4)  April
-          option(value=5)  May
-          option(value=6)  June
-          option(value=7)  July
-          option(value=8)  August
-          option(value=9)  September
-          option(value=10)  October
-          option(value=11)  November
-          option(value=12)  December
+          option(value='01')  January
+          option(value='02')  Febuary
+          option(value='03')  March
+          option(value='04')  April
+          option(value='05')  May
+          option(value='06')  June
+          option(value='07')  July
+          option(value='08')  August
+          option(value='09')  September
+          option(value='10')  October
+          option(value='11')  November
+          option(value='12')  December
 
     li.list-inline-item.propertyDrop
       .dropdown#defaultFlat
@@ -49,17 +49,10 @@ block appMain
   .main_head
     ul.nav.nav-tabs(id="invoiceTab" role="tablist")
       li.nav-item
-        a.nav-link.active(href='#main_in' data-toggle="tab" role="tab" id="allinvoicetab" aria-controls="all" aria-selected="true") All Invoices
+        a.nav-link.active(href='#main_in' data-toggle="tab" role="tab" id="allinvoicetab" aria-controls="all" aria-selected="true") This Month
       |       
       li.nav-item
         a.nav-link(href='#main_sent' data-toggle="tab" role="tab" id="sentinvoices" aria-controls="sent" aria-selected="false") Sent Invoices
-      |       
-      li.nav-item
-        a.nav-link(href='#main_not_sent' data-toggle="tab" role="tab" id="notSentinvoices" aria-controls="not_sent" aria-selected="false") Invoices Not Sent
-      |       
-      li.nav-item
-        a.nav-link(href='#main_empty' data-toggle="tab" role="tab" id="emptyUnits" aria-controls="empty" aria-selected="false") Empty Units
-  
   .tab-content
     .main_in.tab-pane.active(role="tabpanel" aria-labelledby="all-tab" id="main_in")
       .tWrapper1.p-0
@@ -387,34 +380,9 @@ block appMain
         table.table.table-hover.t-1
           thead
             tr
-              th(scope='col', class='tSelect') 
               th(scope='col', class='tUnit') Unit
               th(scope='col', class='tName') Name
               th(scope='col', class='tContacts') Contacts 
               th(scope='col', class='tFinancials') Financials
               th(scope='col', class='tDate') Date
-          tbody#unitTable         
-
-    .main_not_sent.tab-pane(role="tabpanel" aria-labelledby="not_sent-tab" id="main_not_sent")
-      .tWrapper1.p-0
-        table.table.table-hover.t-1
-          thead
-            tr
-              th(scope='col', class='tSelect') 
-              th(scope='col', class='tUnit') Unit
-              th(scope='col', class='tName') Name
-              th(scope='col', class='tContacts') Contacts
-              th(scope='col', class='tFinancials') Financials
-          tbody#unitTable         
-  
-    .main_empty.tab-pane(role="tabpanel" aria-labelledby="empty-tab" id="main_empty")
-      .tWrapper1.p-0
-        table.table.table-hover.t-1
-          thead
-            tr
-              th(scope='col', class='tSelect') 
-              th(scope='col', class='tUnit') Unit
-              th(scope='col', class='tName') Name
-              th(scope='col', class='tContacts') Contacts
-              th(scope='col', class='tFinancials') Financials
-          tbody#unitTable         
+          tbody#pastInvoicesTable     

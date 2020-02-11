@@ -1,15 +1,19 @@
 var tenantDataToEdit = {};
 var unitToAddTenant;
 var currentFlatId;
+var selectedMonth;
+var selectedYear;
 
 $(function () {
   getFlats();
   populateEditTenantModal();
   toggleUnitDropDownIfTenantChanged();
   getUnitIdFromOpenModal();
-  setCurrentMonthToDropDown();
+  setSelectedMonthInDropDown();
+  setSelectedYearInDropDown();
   getSelectedMonth();
   getSelectedYear();
+
 })
 
 function getFlats() {
@@ -144,12 +148,12 @@ function populateEditTenantModal() {
 function submitEditTenantForm() {
   const tenantId = tenantDataToEdit['tenantId']
 
-  if (helpers.validateIsStringEmpty($("#inputName").val()) ) {
+  if (helpers.validateIsStringEmpty($("#inputName").val())) {
     alert("ERROR! Name is empty. Please fill.");
     return;
   }
 
-  if (helpers.validateIsStringEmpty($("#inputPhone").val()) ) {
+  if (helpers.validateIsStringEmpty($("#inputPhone").val())) {
     alert("ERROR! Phone number is empty. Please fill.");
     return;
   }
@@ -233,18 +237,18 @@ function submitAssignTenantToUnitForm() {
 function submitCreateNewTenantForUnitForm() {
   const newTenant = {};
 
-  if (helpers.validateIsStringEmpty($("#newTenantName").val()) ) {
+  if (helpers.validateIsStringEmpty($("#newTenantName").val())) {
     alert("ERROR! Name is empty. Please fill.");
     return;
   }
 
-  if (helpers.validateIsStringEmpty($("#newTenantPhone").val()) ) {
+  if (helpers.validateIsStringEmpty($("#newTenantPhone").val())) {
     alert("ERROR! Phone number is empty. Please fill.");
     return;
   }
 
   newTenant["name"] = $("#newTenantName").val();
-  newTenant["email"] = $("#newTenantEmail").val() ;
+  newTenant["email"] = $("#newTenantEmail").val();
   newTenant["msisdn"] = $("#newTenantPhone").val();
   newTenant["rent"] = $("#newTenantRent").val() || 0;
   newTenant["garbage"] = $("#newTenantGarbage").val() || 0;
@@ -360,36 +364,105 @@ function toggleUnitDropDownIfTenantChanged() {
   });
 }
 
-function setCurrentMonthToDropDown() {
+function setSelectedMonthInDropDown() {
   var d = new Date();
-  var n = d.getMonth();
-  $("#months option[value=" + n + "]").prop('selected', true);
+  selectedMonth = `0${(d.getMonth() + 1)}`.slice(-2);
+  $("#months option[value=" + selectedMonth + "]").prop('selected', true);
+}
+
+function setSelectedYearInDropDown() {
+  var d = new Date();
+  selectedYear = d.getFullYear();
+  $("#year option[value=" + selectedYear + "]").prop('selected', true);
 }
 
 function getLastInvoiceDate(invoices) {
-  if (!invoices) {
-    return null
+  if (invoices && invoices[0]) {
+    const lastInvoice = invoices[0];
+    const date = moment(lastInvoice.createdAt).format('YYYY-MM-DD');
+    const amount = lastInvoice.rent + lastInvoice.water + lastInvoice.garbage + lastInvoice.penalty;
+    return { date, amount };
   }
-  const lastInvoice = invoices.pop();
-
-  if (!lastInvoice) {
-    return null;
-  }
-  const date = moment(lastInvoice.createdAt).format('YYYY-MM-DD');
-  const amount = lastInvoice.rent + lastInvoice.water + lastInvoice.garbage + lastInvoice.penalty;
-  return { date, amount };
+  return null
 }
 
 function getSelectedMonth() {
   $("#months").on("change", function () {
-    console.log('in drop down', $(this).val());
+    selectedMonth = `0${$(this).val()}`.slice(-2);
+    const jwt = localStorage.getItem('token');
+    const date = `${selectedYear}-${selectedMonth}`
+
+    request = $.ajax({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+      },
+      url: `/billing/invoice?flatId=${currentFlatId}&month=${date}`,
+      dataType: 'json',
+    });
+
+    request.done(function (resp) {
+      buildPastInvoiceView(resp);
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+      console.log('/billing/invoice/ error: ', textStatus);
+    });
   });
 }
 
 function getSelectedYear() {
   $("#year").on("change", function () {
-    console.log('in year drop down', $(this).val());
+    selectedYear = $(this).val();
+    const jwt = localStorage.getItem('token');
+    const date = `${selectedYear}-${selectedMonth}`
+
+    request = $.ajax({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
+      },
+      url: `/billing/invoice?flatId=${currentFlatId}&month=${date}`,
+      dataType: 'json',
+    });
+
+    request.done(function (resp) {
+      buildPastInvoiceView(resp);
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+      console.log('/billing/invoice/ error: ', textStatus);
+    });
   });
+}
+
+function buildPastInvoiceView(invoices) {
+  $('.nav-tabs li.nav-item a[href="#main_sent"]').tab('show');
+  $('#pastInvoicesTable').empty();
+  
+  if (invoices != '') {
+    $.each(invoices, function (key, invoice) {
+      if (invoice.createdAt) {
+        const totalRent = invoice.rent + invoice.garbage + invoice.water + invoice.penalty;
+        $('#pastInvoicesTable').append(
+          '<tr><td>' + invoice.Unit.name + '</td>' +
+          '<td>' + invoice.Tenant.User.name + '</td>' +
+          '<td><p>' + invoice.Tenant.User.email + '</p><p>' + invoice.Tenant.User.msisdn + '</p></td>' +
+          '<td><p>Rent: KES ' + invoice.rent + '</p>' +
+            '<p>Garbage: KES ' + invoice.garbage + '</p>' +
+            '<p>Water: KES ' + invoice.water + '</p>' +
+            '<p>Penalty: KES ' + invoice.penalty + '</p>' +
+            '<p><b>TOTAL: KES ' + totalRent + '<b></p>' +
+          '</td>' +
+          '<td>' + invoice.createdAt + '</td></tr>'
+        );
+      }
+      else {
+        $('#pastInvoicesTable').append(
+          '<tr><td>' + invoice.Unit.name + '</td>' +
+          '<td colspan="4">Unoccupied</td></tr>'
+        );
+      }
+    });
+  }
 }
 
 var helpers = {
@@ -412,9 +485,9 @@ var helpers = {
       return true;
     }
     return false;
-  }, 
+  },
   validateIsStringEmpty: function (item) {
-    if (item === ''){
+    if (item === '') {
       return true;
     }
     return false
