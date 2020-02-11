@@ -458,7 +458,7 @@ function buildPastInvoiceView(invoices) {
       else {
         $('#pastInvoicesTable').append(
           '<tr><td>' + invoice.Unit.name + '</td>' +
-          '<td colspan="4">Unoccupied</td></tr>'
+          '<td colspan="4">No Invoice sent</td></tr>'
         );
       }
     });
