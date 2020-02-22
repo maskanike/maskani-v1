@@ -42,6 +42,8 @@ function getFlats() {
       parsedData,
       $('#flats')
     );
+  }).error( function() {
+    window.location.href = '/login';
   });
 }
 
