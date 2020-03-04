@@ -18,12 +18,14 @@ $(function () {
 
 function getFlats() {
   const jwt = localStorage.getItem('token');
-  $.ajax({
+  const request = $.ajax({
     url: '/admin/flat/',
     beforeSend: function (xhr) {
       xhr.setRequestHeader("Authorization", 'Bearer ' + jwt);
     },
-  }).done(function (data) {
+  });
+
+  request.done(function (data) {
     // TODO Weird workaround to get valid JSON. Move this to the backend.
     const parsedData = jQuery.parseJSON(JSON.stringify(data));
     if (!parsedData[0]) {
@@ -42,7 +44,9 @@ function getFlats() {
       parsedData,
       $('#flats')
     );
-  }).error( function() {
+  })
+
+  request.fail( function() {
     window.location.href = '/login';
   });
 }
