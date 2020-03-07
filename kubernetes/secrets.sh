@@ -18,6 +18,14 @@ deploy_secrets() {
 	fi
 }
 
+
+if [ ! $3 ]; then
+  echo "
+    usage: bash secrets.sh [ sandbox | staging | prod ] [ CLUSTER_IP ] [ PASSWORD (Add password with single quotes) ]
+   "  
+   exit -1
+fi
+
 app=maskani
 ip=$2
 password=$3
