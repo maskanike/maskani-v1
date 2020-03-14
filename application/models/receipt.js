@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Receipt.associate = function(models) {
     Receipt.belongsTo(models.Tenant);
+    Receipt.belongsTo(models.Unit);
   };
   return Receipt;
 };
