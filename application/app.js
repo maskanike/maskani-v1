@@ -29,12 +29,12 @@ app.use('/auth', authRouter);
 app.use('/tenant', tenantRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -44,17 +44,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var port = normalizePort(process.env.PORT || '3000');
-
-app.listen(port, () => {
-  console.log(`maskani app listening on port ${port}!`)
-});
-
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (Number.isNaN(port)) {
     // named pipe
     return val;
   }
@@ -66,5 +60,10 @@ function normalizePort(val) {
 
   return false;
 }
+const port = normalizePort(process.env.PORT || '3000');
+
+app.listen(port, () => {
+  console.log(`maskani app listening on port ${port}!`);
+});
 
 module.exports = app;

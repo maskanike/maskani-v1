@@ -12,7 +12,7 @@ module.exports = {
       status: 'active',
       role: 'landlord',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ module.exports = {
       status: 'active',
       role: 'tenant',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     {
       id: 3,
@@ -34,7 +34,7 @@ module.exports = {
       status: 'active',
       role: 'tenant',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     {
       id: 4,
@@ -45,13 +45,10 @@ module.exports = {
       status: 'active',
       role: 'tenant',
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
-    ],
-    );
+      updatedAt: new Date(),
+    },
+    ]);
   },
 
-  down: (queryInterface) => {
-    return queryInterface.bulkDelete('Users', null, {});
-  }
+  down: (queryInterface) => queryInterface.bulkDelete('Users', null, {}),
 };

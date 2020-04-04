@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "../.eslintrc"
+  ],
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "assert": true,
+    "before": true,
+    "beforeEach": true,
+    "describe": true,
+    "request": true,
+    "token": true,
+  }
+}

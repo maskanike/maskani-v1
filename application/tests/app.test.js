@@ -3,25 +3,25 @@ const axios = require('axios');
 const url = require('url');
 const app = require('../app');
 
-const port =  app.get('port') | 8998;
-const getUrl = pathname => url.format({
+const port = app.get('port') || 8998;
+const getUrl = (pathname) => url.format({
   hostname: app.get('host') || 'localhost',
   protocol: 'http',
   port,
-  pathname
+  pathname,
 });
 
 describe('Maskani application tests', () => {
-    let server;
+  let server;
 
-    before(function(done) {
-      server = app.listen(port);
-      server.once('listening', () => done());
-    });
-  
-    after(function(done) {
-      server.close(done);
-    });
+  before((done) => {
+    server = app.listen(port);
+    server.once('listening', () => done());
+  });
+
+  after((done) => {
+    server.close(done);
+  });
 
   it('starts and shows the index page', async () => {
     const { data } = await axios.get(getUrl());
@@ -29,13 +29,13 @@ describe('Maskani application tests', () => {
     assert.ok(data.indexOf('<html lang="en">') !== -1);
   });
 
-  describe('404', function() {
+  describe('404', () => {
     it('shows a 404 HTML page', async () => {
       try {
         await axios.get(getUrl('path/to/nowhere'), {
           headers: {
-            'Accept': 'text/html'
-          }
+            Accept: 'text/html',
+          },
         });
         assert.fail('should never get here');
       } catch (error) {
@@ -49,7 +49,7 @@ describe('Maskani application tests', () => {
     it('shows a 404 JSON error without stack trace', async () => {
       try {
         await axios.get(getUrl('path/to/nowhere'), {
-          json: true
+          json: true,
         });
         assert.fail('should never get here');
       } catch (error) {

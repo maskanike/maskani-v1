@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     destination: DataTypes.STRING,
     type: DataTypes.ENUM('email', 'sms'),
     status: DataTypes.ENUM('success', 'failed'),
-    error: DataTypes.JSON
+    error: DataTypes.JSON,
   }, {});
-  Notification.associate = function(models) {
+  Notification.associate = (models) => {
     Notification.belongsTo(models.Tenant);
   };
   return Notification;

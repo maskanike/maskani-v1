@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
-
 import models from '../models';
 import auth from '../middlewares/auth';
 import attachCurrentUser from '../middlewares/attachCurrentUser';
 
-router.get('/', function (req, res) {
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/', (req, res) => {
   res.send('Welcome to the Admin API');
 });
 
@@ -13,7 +14,7 @@ router.get('/', function (req, res) {
 router.get('/flat', auth, attachCurrentUser, async (req, res) => {
   console.log('/flat GET  request made by user: ', req.currentUser.name);
 
-  const flats = await models.Flat.findAll({ where: { UserId: req.currentUser.id }});
+  const flats = await models.Flat.findAll({ where: { UserId: req.currentUser.id } });
   return res.send(flats);
 });
 
@@ -21,7 +22,7 @@ router.post('/flat', auth, attachCurrentUser, async (req, res) => {
   console.log('/flat POST  request made by user: ', req.currentUser.name);
 
   const message = await models.Flat.create({
-    name: req.body.name, paymentDetails: req.body.paymentDetails, UserId:req.currentUser.id
+    name: req.body.name, paymentDetails: req.body.paymentDetails, UserId: req.currentUser.id,
   });
   return res.send(message);
 });
@@ -31,8 +32,8 @@ router.delete('/flat/:flatId', auth, attachCurrentUser, async (req, res) => {
 
   await models.Flat.destroy({
     where: {
-      id: req.params.flatId
-    }
+      id: req.params.flatId,
+    },
   });
   return res.send(true);
 });
@@ -42,7 +43,7 @@ router.put('/flat/:flatId', auth, attachCurrentUser, async (req, res) => {
 
   const message = await models.Flat.update(
     { name: req.body.name, paymentDetails: req.body.paymentDetails },
-    { returning: true, where: { id: req.params.flatId } }
+    { returning: true, where: { id: req.params.flatId } },
   );
   return res.send(message);
 });
@@ -55,16 +56,16 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
   // User has to be authenticated to check their units.
   const { flatId, month } = req.query;
   if (!flatId) {
-    return res.send('Flat not specified. Add ?flatId=')
+    return res.send('Flat not specified. Add ?flatId=');
   }
 
-  if (month){
-    console.log('trying to filter by month. Feature not available yet.')
+  if (month) {
+    console.log('trying to filter by month. Feature not available yet.');
   }
 
-  const units = await models.Unit.
-    findAll({
-      where: { FlatId:flatId },
+  const units = await models.Unit
+    .findAll({
+      where: { FlatId: flatId },
       include: [
         {
           model: models.Tenant,
@@ -75,7 +76,7 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
         [models.Tenant, models.Invoice, 'createdAt', 'desc'],
       ],
     });
-  
+
   return res.send(units);
 });
 
@@ -84,7 +85,7 @@ router.post('/unit', auth, attachCurrentUser, async (req, res) => {
 
   // TODO invalidate if flatId is not passed
   const unit = await models.Unit.create({
-    name: req.body.name, status: req.body.status, FlatId: req.body.flatId
+    name: req.body.name, status: req.body.status, FlatId: req.body.flatId,
   });
   return res.status(201).send(unit);
 });
@@ -94,8 +95,8 @@ router.delete('/unit/:unitId', auth, attachCurrentUser, async (req, res) => {
 
   await models.Unit.destroy({
     where: {
-      id: req.params.unitId
-    }
+      id: req.params.unitId,
+    },
   });
   return res.send(true);
 });
@@ -105,7 +106,7 @@ router.put('/unit/:unitId', auth, attachCurrentUser, async (req, res) => {
 
   const message = await models.Unit.update(
     { name: req.body.name, status: req.body.status },
-    { returning: true, where:{ id: req.params.unitId } }
+    { returning: true, where: { id: req.params.unitId } },
   );
   return res.send(message);
 });

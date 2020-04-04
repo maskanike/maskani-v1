@@ -1,16 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const moment = require('moment');
-
 import auth from '../middlewares/auth';
 import attachCurrentUser from '../middlewares/attachCurrentUser';
 import models from '../models';
-import {sendInvoiceEmail, sendReceiptEmail } from '../controllers/utils/send_email';
+import logError from '../controllers/utils/error_notify';
 import sendSMS from '../controllers/utils/send_sms';
 import sendSlackNotification from '../controllers/utils/slack_notify';
-const Op = models.Sequelize.Op;
+import { sendInvoiceEmail, sendReceiptEmail } from '../controllers/utils/send_email';
 
-router.get('/', function (req, res) {
+const express = require('express');
+
+const router = express.Router();
+const moment = require('moment');
+
+const { Op } = models.Sequelize;
+
+router.get('/', (req, res) => {
   res.send('Welcome to the Billing API');
 });
 
@@ -24,23 +27,24 @@ router.get('/invoice', async (req, res) => {
 
   const invoices = await models.Invoice.findAll({
     where: {
-      // FlatId, 
+
+      // FlatId,
       createdAt: {
-        [Op.between]: [initDate, endDate]
-      }
+        [Op.between]: [initDate, endDate],
+      },
     },
     include: [
       models.Unit,
-      { model: models.Tenant, include: models.User }]
+      { model: models.Tenant, include: models.User }],
   });
 
-  const units = await models.Unit.findAll({ where: { FlatId }});
-  
+  const units = await models.Unit.findAll({ where: { FlatId } });
+
   const resp = units.map((unit) => {
-    const invoice = invoices.find(invoice => invoice.Unit.id === unit.id);
+    const invoice = invoices.find((inv) => inv.Unit.id === unit.id);
     if (invoice) {
-      return invoice
-    };
+      return invoice;
+    }
     return { invoice: null, UnitId: unit.id, Unit: unit };
   });
   return res.send(resp);
@@ -48,7 +52,9 @@ router.get('/invoice', async (req, res) => {
 
 
 router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
-  const { rent, water, penalty, garbage, tenantId } = req.body;
+  const {
+    rent, water, penalty, garbage, tenantId,
+  } = req.body;
   try {
     const tenant = await models.Tenant.findByPk(tenantId);
     const unit = await tenant.getUnit();
@@ -61,7 +67,7 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       penalty,
       garbage,
       TenantId: tenantId,
-      UnitId: unit.id
+      UnitId: unit.id,
     });
     const totalRent = rent + water + penalty + garbage;
 
@@ -69,6 +75,7 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       amount: totalRent,
       type: 'invoice',
       TenantId: tenantId,
+
       // TODO keep track of how much a tenant owes.
     });
 
@@ -78,9 +85,15 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
 
     const flatUser = await models.User.findByPk(flat.UserId);
 
-    const sms = `Hello ${user.name.split(' ')[0]}! This is an invoice for ${unit.name} at ${flat.name} for the period ${month} - ${year}.\nTOTAL: ${totalRent}\n` +
-      `Sent to your email ${user.email}.`;
-    sendSMS(req, user.msisdn, sms);
+    let { msisdn } = user;
+    if (msisdn) {
+      const sms = `Hello ${user.name.split(' ')[0]}! This is an invoice for ${unit.name} at ${flat.name} for the period ${month} - ${year}.\nTOTAL: ${totalRent}\n`
+      + `Sent to your email ${user.email}.`;
+      msisdn = msisdn.replace(/ /g, '');
+      sendSMS(msisdn, sms);
+    } else {
+      console.log(`User ${flatUser} does not have a phone number. Skipping sending SMS`);
+    }
 
     sendSlackNotification(
       '#invoices',
@@ -101,25 +114,17 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
         water,
         penalty,
         garbage,
-      }
+      };
       sendInvoiceEmail(emailData);
     } else {
       console.log(`User ${flatUser} does not have an email address. Skipping sending email address`);
     }
 
     return res.status(201).send(invoice);
-
   } catch (error) {
-    console.error('error happened: ', error);
-    const env = process.env.NODE_ENV;
-    if (env === 'production') {
-      await sendSlackNotification('#production-errors', JSON.stringify(error));
-    }
-    else if (env === 'staging') {
-      await sendSlackNotification('#staging-errors', JSON.stringify(error));
-    }
+    logError(`error happened: ${error.message}`);
   }
-  return res.status(400).send(`An error occurred ${error}`);
+  return res.status(400).send('An unknown error occurred');
 });
 
 router.get('/receipts', async (req, res) => {
@@ -132,21 +137,21 @@ router.get('/receipts', async (req, res) => {
   const receipts = await models.Receipt.findAll({
     where: {
       createdAt: {
-        [Op.between]: [initDate, endDate]
-      }
+        [Op.between]: [initDate, endDate],
+      },
     },
     include: [
       models.Unit,
-      { model: models.Tenant, include: models.User }]
+      { model: models.Tenant, include: models.User }],
   });
 
-  const units = await models.Unit.findAll({ where: { FlatId }});
-  
+  const units = await models.Unit.findAll({ where: { FlatId } });
+
   const resp = units.map((unit) => {
-    const receipt = receipts.find(receipt => receipt.Unit.id === unit.id);
+    const receipt = receipts.find((recpt) => recpt.Unit.id === unit.id);
     if (receipt) {
-      return receipt
-    };
+      return receipt;
+    }
     return { receipt: null, UnitId: unit.id, Unit: unit };
   });
   return res.send(resp);
@@ -163,11 +168,11 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
     const receipt = await models.Receipt.create({
       amount,
       TenantId: tenantId,
-      UnitId: unit.id
+      UnitId: unit.id,
     });
 
     await models.Statement.create({
-      amount: amount,
+      amount,
       type: 'payment',
       TenantId: tenantId,
     });
@@ -179,9 +184,15 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
 
     const flatUser = await models.User.findByPk(flat.UserId);
 
-    const sms = `Hello ${user.name.split(' ')[0]}! This is to confirm we received ${amount} Kshs for ${unit.name} at ${flat.name}.\n` +
-      `Sent to your email ${user.email}.`;
-    sendSMS(req, user.msisdn, sms);
+    let { msisdn } = user;
+    if (msisdn) {
+      const sms = `Hello ${user.name.split(' ')[0]}! This is to confirm we received ${amount} Kshs for ${unit.name} at ${flat.name}.\n`
+      + `Sent to your email ${user.email}.`;
+      msisdn = msisdn.replace(/ /g, '');
+      sendSMS(msisdn, sms);
+    } else {
+      console.log(`User ${flatUser} does not have a phone number. Skipping sending SMS`);
+    }
 
     sendSlackNotification(
       '#receipts',
@@ -199,25 +210,23 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
         month,
         year,
         amount,
-      }
-      sendEmail(emailData);
+      };
+      sendReceiptEmail(emailData);
     } else {
       console.log(`User ${flatUser} does not have an email address. Skipping sending email address`);
     }
 
     return res.status(201).send(receipt);
-
   } catch (error) {
-    console.error('error happened: ', error);
+    logError(`error happened: ${error.message}`);
     const env = process.env.NODE_ENV;
     if (env === 'production') {
       await sendSlackNotification('#production-errors', JSON.stringify(error));
-    }
-    else if (env === 'staging') {
+    } else if (env === 'staging') {
       await sendSlackNotification('#staging-errors', JSON.stringify(error));
     }
   }
-  return res.status(400).send(`An error occurred ${error}`);
+  return res.status(400).send('An unknown error occurred');
 });
 
 module.exports = router;

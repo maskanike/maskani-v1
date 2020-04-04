@@ -1,5 +1,5 @@
-import { 
- findByID, getAllFromModel, aFlatExistsWith, aUnitExistsWith, truncateModel
+import {
+  findByID, getAllFromModel, aFlatExistsWith, aUnitExistsWith, truncateModel,
 } from './utils.test';
 
 describe('Units', () => {
@@ -15,7 +15,7 @@ describe('Units', () => {
       await aUnitExistsWith({ name: 'unit 1', FlatId: flat.id });
 
       // expect
-      const resp = await request.get(`/admin/unit?flatId=${flat.id}`).set('Authorization', 'Bearer ' + token).expect(200);
+      const resp = await request.get(`/admin/unit?flatId=${flat.id}`).set('Authorization', `Bearer ${token}`).expect(200);
 
       // when
       resp.body.should.be.a('array');
@@ -31,7 +31,7 @@ describe('Units', () => {
       const unit = { name: 'unit 1', flatId: flat.id };
 
       // expect
-      const resp = await request.post(`/admin/unit`).set('Authorization', 'Bearer ' + token).send(unit).expect(201);
+      const resp = await request.post('/admin/unit').set('Authorization', `Bearer ${token}`).send(unit).expect(201);
 
       // when
       resp.body.should.be.a('object');
@@ -44,13 +44,13 @@ describe('Units', () => {
     it('should UPDATE a unit given their id', async () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
-      const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });;
+      const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
       const updatedUnit = { name: 'unit 2' };
 
       // expect
       await request.put(`/admin/unit/${unit.id}`)
         .send(updatedUnit)
-        .set('Authorization', 'Bearer ' + token)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       // when
@@ -69,7 +69,7 @@ describe('Units', () => {
       units.length.should.be.eql(1);
 
       // expect
-      await request.delete(`/admin/unit/${unit.id}`).set('Authorization', 'Bearer ' + token).expect(200);
+      await request.delete(`/admin/unit/${unit.id}`).set('Authorization', `Bearer ${token}`).expect(200);
 
       // when
       const unitsAfterDeletion = await getAllFromModel('Unit');

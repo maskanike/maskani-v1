@@ -1,5 +1,6 @@
-import { 
-  aTenantExistsWith, findByID, getAllFromModel, aFlatExistsWith, aUnitExistsWith, aUserExistsWith, truncateModel
+import {
+  aTenantExistsWith, findByID, getAllFromModel, aFlatExistsWith,
+  aUnitExistsWith, aUserExistsWith, truncateModel,
 } from './utils.test';
 
 describe('Tenants', () => {
@@ -8,18 +9,18 @@ describe('Tenants', () => {
     await truncateModel('Tenant');
     await truncateModel('Flat');
   });
-  
+
   describe('GET /tenant', () => {
     it('should get all tenant', async () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
-      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com", msisdn: 254723453841 });
+      const user = await aUserExistsWith({ name: 'sam', email: 'admin@flatspad.com', msisdn: 254723453841 });
       await aTenantExistsWith({
-        rent: 1000, deposit: 100, balance: 0, water: 0, FlatId:flat.id, UserId:user.id
+        rent: 1000, deposit: 100, balance: 0, water: 0, FlatId: flat.id, UserId: user.id,
       });
 
       // expect
-      const resp = await request.get(`/tenant?flatId=${flat.id}`).set('Authorization', 'Bearer ' + token).expect(200);
+      const resp = await request.get(`/tenant?flatId=${flat.id}`).set('Authorization', `Bearer ${token}`).expect(200);
 
       // when
       resp.body.should.be.a('array');
@@ -36,11 +37,19 @@ describe('Tenants', () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
       const unit = await aUnitExistsWith({ name: 'unit 1', FlatId: flat.id });
-      const tenant = { rent: 1000, water: 150, garbage: 100, flatId:flat.id, unitId: unit.id,
-        name: 'sam', email: "admin@flatspad.com", msisdn: 254723453841 };
+      const tenant = {
+        rent: 1000,
+        water: 150,
+        garbage: 100,
+        flatId: flat.id,
+        unitId: unit.id,
+        name: 'sam',
+        email: 'admin@flatspad.com',
+        msisdn: 254723453841,
+      };
 
       // expect
-      const resp = await request.post(`/tenant`).set('Authorization', 'Bearer ' + token).send(tenant).expect(201);
+      const resp = await request.post('/tenant').set('Authorization', `Bearer ${token}`).send(tenant).expect(201);
 
       // when
       resp.body.should.be.a('object');
@@ -59,15 +68,17 @@ describe('Tenants', () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
       const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
-      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com" });
+      const user = await aUserExistsWith({ name: 'sam', email: 'admin@flatspad.com' });
       const tenant = await aTenantExistsWith({ rent: 2000, deposit: 100 });
-      
-      const updatedTenant = { rent: 1000, deposit: 1000, balance: 100, flatId:flat.id, userId:user.id, unitId: unit.id };
+
+      const updatedTenant = {
+        rent: 1000, deposit: 1000, balance: 100, flatId: flat.id, userId: user.id, unitId: unit.id,
+      };
 
       // expect
       await request.put(`/tenant/${tenant.id}`)
         .send(updatedTenant)
-        .set('Authorization', 'Bearer ' + token)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       // when
@@ -82,15 +93,22 @@ describe('Tenants', () => {
       // given
       const flat = await aFlatExistsWith({ name: 'magondu flat' });
       const unit = await aUnitExistsWith({ name: 'unit 1', flatId: flat.id });
-      const user = await aUserExistsWith({ name: 'sam', email: "admin@flatspad.com" });
+      const user = await aUserExistsWith({ name: 'sam', email: 'admin@flatspad.com' });
       const tenant = await aTenantExistsWith({
-        rent: 1000, deposit: 100, balance: 0, water: 0, FlatId:flat.id, UserId:user.id, UnitId:unit.id
+        rent: 1000,
+        deposit: 100,
+        balance: 0,
+        water: 0,
+        FlatId: flat.id,
+        UserId: user.id,
+        UnitId: unit.id,
       });
 
       const tenants = await getAllFromModel('Tenant');
       tenants.length.should.be.eql(1);
+
       // expect
-      await request.delete(`/tenant/${tenant.id}`).set('Authorization', 'Bearer ' + token).expect(200);
+      await request.delete(`/tenant/${tenant.id}`).set('Authorization', `Bearer ${token}`).expect(200);
 
       // when
       const tenantsAfterDeletion = await getAllFromModel('Tenant');

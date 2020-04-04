@@ -1,6 +1,6 @@
-$(function () {
-  displayLoggedInUser()
-})
+$(() => {
+  displayLoggedInUser();
+});
 
 function displayLoggedInUser() {
   const name = localStorage.getItem('name');

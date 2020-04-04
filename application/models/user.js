@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     msisdn: DataTypes.STRING,
     password: DataTypes.STRING,
     status: DataTypes.ENUM('active', 'pending', 'deleted'),
-    role: DataTypes.ENUM('landlord', 'agent', 'tenant')
+    role: DataTypes.ENUM('landlord', 'agent', 'tenant'),
   }, {});
   return User;
 };
