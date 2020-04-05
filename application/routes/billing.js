@@ -92,7 +92,7 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       msisdn = msisdn.replace(/ /g, '');
       sendSMS(msisdn, sms);
     } else {
-      console.log(`User ${flatUser} does not have a phone number. Skipping sending SMS`);
+      console.log(`User ${JSON.stringify(user)} does not have a phone number. Skipping sending SMS`);
     }
 
     sendSlackNotification(
@@ -100,7 +100,7 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       `Invoice sent to ${user.name} for ${unit.name} at ${flat.name} for the period ${month} - ${year} of amount ${totalRent}`,
     );
 
-    if (flatUser && flatUser.email) {
+    if (user && user.email && flatUser && flatUser.email) {
       const emailData = {
         to: user.email,
         from: flatUser.email,
@@ -117,7 +117,7 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       };
       sendInvoiceEmail(emailData);
     } else {
-      console.log(`User ${flatUser} does not have an email address. Skipping sending email address`);
+      console.log(`Account admin ${JSON.stringify(flatUser)} or user ${JSON.stringify(user)} does not have an email address. Skipping sending email address`);
     }
 
     return res.status(201).send(invoice);
@@ -191,7 +191,7 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
       msisdn = msisdn.replace(/ /g, '');
       sendSMS(msisdn, sms);
     } else {
-      console.log(`User ${flatUser} does not have a phone number. Skipping sending SMS`);
+      console.log(`User ${JSON.stringify(user)} does not have a phone number. Skipping sending SMS`);
     }
 
     sendSlackNotification(
@@ -199,7 +199,7 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
       `Receipt sent to ${user.name} for ${unit.name} at ${flat.name} for the period ${month} - ${year} of amount ${amount}`,
     );
 
-    if (flatUser && flatUser.email) {
+    if (user && user.email && flatUser && flatUser.email) {
       const emailData = {
         to: user.email,
         from: flatUser.email,
@@ -213,7 +213,7 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
       };
       sendReceiptEmail(emailData);
     } else {
-      console.log(`User ${flatUser} does not have an email address. Skipping sending email address`);
+      console.log(`User ${JSON.stringify(user)} does not have an email address. Skipping sending email address`);
     }
 
     return res.status(201).send(receipt);
