@@ -9,7 +9,7 @@
     "start": "yarn migrate && nodemon --exec babel-node ./app.js",
     "lint": "./node_modules/.bin/eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
     "format": "./node_modules/.bin/eslint . --max-warnings=0 --report-unused-disable-directives --fix && echo '✔  Your .js files look good.'",
-    "test": "export NODE_ENV=test && ./node_modules/.bin/sequelize db:migrate:undo:all && yarn migrate && mocha --require @babel/register 'tests/**/**test.js' --exit"
+    "test": "yarn lint && export NODE_ENV=test && ./node_modules/.bin/sequelize db:migrate:undo:all && yarn migrate && mocha --require @babel/register 'tests/**/**test.js' --exit"
   },
   "dependencies": {
     "argon2": "^0.26.1",
@@ -44,7 +44,14 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
+    "husky": "^4.2.3",
     "mocha": "^7.1.1",
     "nodemon": "^2.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn audit && yarn test"
+    }
   }
 }
