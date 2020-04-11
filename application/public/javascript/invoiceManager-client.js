@@ -109,7 +109,7 @@ function sendInvoice(tenantId, rent, water, garbage, penalty) {
     beforeSend(xhr) {
       xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
     },
-    url: '/billing/invoice',
+    url: '/billing/invoices',
     type: 'POST',
     dataType: 'json',
     contentType: 'application/json',
@@ -117,7 +117,7 @@ function sendInvoice(tenantId, rent, water, garbage, penalty) {
   });
 
   request.done((resp) => {
-    console.log('/billing/invoice response: ', resp);
+    console.log('/billing/invoices response: ', resp);
     alert('Invoice sent');
     window.location.href = '/app/invoice';
 
@@ -399,7 +399,7 @@ function getSelectedMonth() {
       beforeSend(xhr) {
         xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
       },
-      url: `/billing/invoice?flatId=${currentFlatId}&month=${date}`,
+      url: `/billing/invoices?flatId=${currentFlatId}&month=${date}`,
       dataType: 'json',
     });
 
@@ -408,7 +408,7 @@ function getSelectedMonth() {
     });
 
     request.fail((jqXHR, textStatus) => {
-      console.log('/billing/invoice/ error: ', textStatus);
+      console.log('/billing/invoices/ error: ', textStatus);
     });
   });
 }
@@ -423,7 +423,7 @@ function getSelectedYear() {
       beforeSend(xhr) {
         xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
       },
-      url: `/billing/invoice?flatId=${currentFlatId}&month=${date}`,
+      url: `/billing/invoices?flatId=${currentFlatId}&month=${date}`,
       dataType: 'json',
     });
 

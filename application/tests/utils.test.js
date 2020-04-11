@@ -1,7 +1,7 @@
 const models = require('../models');
 
 const {
-  Tenant, User, Flat, Unit,
+  Tenant, User, Flat, Unit, Invoice, Receipt, Statement,
 } = models;
 
 async function aTenantExistsWith(props) {
@@ -18,6 +18,18 @@ async function aUnitExistsWith(props) {
 
 async function aUserExistsWith(props) {
   return User.create(props);
+}
+
+async function anInvoiceExistsWith(props) {
+  return Invoice.create(props);
+}
+
+async function aReceiptExistsWith(props) {
+  return Receipt.create(props);
+}
+
+async function aStatementExistsWith(props) {
+  return Statement.create(props);
 }
 
 async function truncateModel(model) {
@@ -48,6 +60,9 @@ export {
   aFlatExistsWith,
   aUnitExistsWith,
   aUserExistsWith,
+  anInvoiceExistsWith,
+  aReceiptExistsWith,
+  aStatementExistsWith,
   deleteDatabaseEntryWithId,
   findByID,
   findUserByAPIKey,

@@ -9,6 +9,7 @@ const adminRouter = require('./routes/admin');
 const authRouter = require('./routes/auth');
 const billingRouter = require('./routes/billing');
 const tenantRouter = require('./routes/tenant_management');
+const chartsRouter = require('./routes/charts_stats');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/billing', billingRouter);
 app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
 app.use('/tenant', tenantRouter);
+app.use('/charts', chartsRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

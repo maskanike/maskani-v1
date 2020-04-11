@@ -11,10 +11,40 @@ block appSidebar
   // p Dashboard
 
 block appMain
+  script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js')
   script(src='/javascript/dashboardManager-client.js')
 
   h2.main_sub_title.text-center Welcome, 
-    span#loggedInUserName John Doe 
-  p.sub_sub_title.text-center Notifications on things that need to be done.
-  <br><hr><br>
-  p.sub_sub_title.text-center Timeline of Activities By Month & by Property
+    span#loggedInUserName
+  //- p.sub_sub_title.text-center Notifications on things that need to be done.
+  //- <br><hr><br>
+  //- p.sub_sub_title.text-center Timeline of Activities By Month & by Property
+  .tabs-animation
+  .mb-3.card
+    .no-gutters.row
+      .col-sm-6.col-md-6.col-xl-6
+        .card.no-shadow.rm-border.bg-transparent.widget-chart.text-left
+          .widget-chart-content
+            .widget-subheading Amount Invoiced
+            .widget-numbers.text-success
+              span#invoicedAmount
+        .divider.m-0.d-md-none.d-sm-block
+      .col-sm-6.col-md-6.col-xl-6
+        .card.no-shadow.rm-border.bg-transparent.widget-chart.text-left
+          .widget-chart-content
+            .widget-subheading Occupancy
+            .widget-numbers.text-warning
+              span#occupancy
+        .divider.m-0.d-md-none.d-sm-block
+      //- .col-sm-12.col-md-4.col-xl-4
+      //-   .card.no-shadow.rm-border.bg-transparent.widget-chart.text-left
+      //-     .widget-chart-content
+      //-       .widget-subheading Tenants Vacated
+      //-       .widget-numbers.text-info
+      //-         span#tenantsVacated
+    //- .text-center.d-block.p-3.card-footer
+    //-   button.btn-pill.btn-shadow.btn-wide.fsize-1.btn.btn-primary.btn-lg
+    //-     span.mr-2.opacity-7
+    //-       i.icon.icon-anim-pulse.ion-ios-analytics-outline
+    //-     span.mr-1 View Complete Report
+  canvas#dashboardChart(width='400' height='200')

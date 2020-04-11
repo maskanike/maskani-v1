@@ -17,6 +17,7 @@ function login() {
         localStorage.setItem('token', result.token);
         localStorage.setItem('name', result.user.name);
         localStorage.setItem('email', result.user.email);
+        localStorage.setItem('userId', result.user.id);
 
         // Redirect to dashboard
         window.location.href = '/app/dashboard';
@@ -74,6 +75,7 @@ function signup(data) {
       localStorage.setItem('token', result.token);
       localStorage.setItem('name', result.user.name);
       localStorage.setItem('email', result.user.email);
+      localStorage.setItem('userId', result.user.id);
 
       // Redirect to dashboard
       window.location.href = '/app/dashboard';

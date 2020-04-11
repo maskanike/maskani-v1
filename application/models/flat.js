@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Flat.associate = (models) => {
     Flat.belongsTo(models.User);
+    Flat.hasMany(models.Unit);
   };
   return Flat;
 };

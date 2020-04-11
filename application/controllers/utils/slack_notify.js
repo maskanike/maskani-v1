@@ -10,6 +10,7 @@ const channels = {
 async function sendSlackNotification(channel, message) {
   if (process.env.NODE_ENV === 'test') {
     console.log('In test env. Ignore slack notification');
+    return;
   }
 
   const channelUri = channels[channel];
