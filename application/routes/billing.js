@@ -5,6 +5,7 @@ import logError from '../controllers/utils/error_notify';
 import sendSMS from '../controllers/utils/send_sms';
 import sendSlackNotification from '../controllers/utils/slack_notify';
 import { sendInvoiceEmail, sendReceiptEmail } from '../controllers/utils/send_email';
+import { invalidateOtherInvoiceForMonth, invalidateOtherReceiptForMonth } from '../controllers/billing/utils';
 
 const express = require('express');
 
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
 });
 
 // TODO out in auth 'auth, attachCurrentUser;'
-router.get('/invoice', async (req, res) => {
+router.get('/invoices', async (req, res) => {
   const today = moment();
   const date = req.query.month || today.format('YYYY-MM');
   const initDate = moment(date).format();
@@ -27,7 +28,6 @@ router.get('/invoice', async (req, res) => {
 
   const invoices = await models.Invoice.findAll({
     where: {
-
       // FlatId,
       createdAt: {
         [Op.between]: [initDate, endDate],
@@ -51,7 +51,7 @@ router.get('/invoice', async (req, res) => {
 });
 
 
-router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
+router.post('/invoices', auth, attachCurrentUser, async (req, res) => {
   const {
     rent, water, penalty, garbage, tenantId,
   } = req.body;
@@ -60,6 +60,8 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
     const unit = await tenant.getUnit();
     const user = await tenant.getUser();
     const flat = await tenant.getFlat();
+
+    await invalidateOtherInvoiceForMonth(tenant.id);
 
     const invoice = await models.Invoice.create({
       rent,
@@ -75,7 +77,6 @@ router.post('/invoice', auth, attachCurrentUser, async (req, res) => {
       amount: totalRent,
       type: 'invoice',
       TenantId: tenantId,
-
       // TODO keep track of how much a tenant owes.
     });
 
@@ -164,6 +165,8 @@ router.post('/receipts', auth, attachCurrentUser, async (req, res) => {
     const unit = await tenant.getUnit();
     const user = await tenant.getUser();
     const flat = await tenant.getFlat();
+
+    await invalidateOtherReceiptForMonth(tenant.id);
 
     const receipt = await models.Receipt.create({
       amount,
