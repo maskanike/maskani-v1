@@ -81,7 +81,7 @@ async function getThisMonthStats(UserId) {
     units = await flats[0].getUnits();
     if (units.length) {
       occupants = await getOccupantsInFlat(units);
-      occupancy = (occupants / units.length) * 100;
+      occupancy = Math.round((occupants / units.length) * 100);
     }
   }
   return {
