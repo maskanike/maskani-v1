@@ -4,7 +4,7 @@ const channels = {
   '#invoices': 'SLACK_NOTIFY_URL_INVOICES',
   '#receipts': 'SLACK_NOTIFY_URL_RECEIPTS',
   '#staging-errors': 'SLACK_NOTIFY_URL_STAGING_ERRORS',
-  '#production-errors': 'SLACK_NOTIFY_URL_PRODUCTION_ERRORS',
+  '#production-errors': 'SLACK_NOTIFY_URL_PROD_ERRORS',
 };
 
 async function sendSlackNotification(channel, message) {
