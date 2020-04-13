@@ -27,16 +27,16 @@ async function createUser(name, email, msisdn) {
   return models.User.create({ name, email, msisdn });
 }
 
-async function createTenant(rent, garbage, water, penalty) {
+async function createTenant(rent, garbage, water, penalty, receiptAmount) {
   return models.Tenant.create({
-    balance: 0, rent, garbage, water, penalty,
+    balance: 0, rent, garbage, water, penalty, receiptAmount,
   });
 }
 
 // Tenant CRUD REST API
 router.get('/', auth, attachCurrentUser, async (req, res) => {
   const user = req.currentUser;
-  console.log('/tenant GET request made by user: ', user.name);
+  console.log('GET /tenant request made by user: ', user.name);
 
   const FlatId = req.query.flatId;
   if (!FlatId) {
@@ -50,14 +50,14 @@ router.get('/', auth, attachCurrentUser, async (req, res) => {
 });
 
 router.post('/', auth, attachCurrentUser, async (req, res) => {
-  console.log('/tenant POST  request made by user: ', req.currentUser.name);
+  console.log('POST /tenant request made by user: ', req.currentUser.name);
 
   const {
-    name, email, msisdn, rent, garbage, penalty, water, unitId, flatId,
+    name, email, msisdn, rent, garbage, penalty, water, receiptAmount, unitId, flatId,
   } = req.body;
   try {
     const user = await createUser(name, email, msisdn);
-    const tenant = await createTenant(rent, garbage, water, penalty);
+    const tenant = await createTenant(rent, garbage, water, penalty, receiptAmount);
 
     await tenant.setUser(user.id);
     await tenant.setUnit(unitId);
@@ -71,7 +71,7 @@ router.post('/', auth, attachCurrentUser, async (req, res) => {
 });
 
 router.delete('/:tenantId', auth, attachCurrentUser, async (req, res) => {
-  console.log('/tenant DELETE  request made by user: ', req.currentUser.name);
+  console.log('DELETE /tenant request made by user: ', req.currentUser.name);
   await models.Tenant.destroy({
     where: {
       id: req.params.tenantId,
@@ -81,16 +81,23 @@ router.delete('/:tenantId', auth, attachCurrentUser, async (req, res) => {
 });
 
 router.put('/:tenantId', auth, attachCurrentUser, async (req, res) => {
-  console.log('/tenant PUT  request made by user: ', req.currentUser.name);
+  console.log('PUT /tenant request made by user: ', req.currentUser.name);
+  const {
+    rent, deposit, balance, garbage, penalty, water, receiptAmount, flatId, userId, unitId,
+  } = req.body;
 
   const message = await models.Tenant.update(
     {
-      rent: req.body.rent,
-      deposit: req.body.deposit,
-      balance: req.body.balance,
-      FlatId: req.body.flatId,
-      UserId: req.body.userId,
-      UnitId: req.body.unitId,
+      rent,
+      garbage,
+      water,
+      penalty,
+      receiptAmount,
+      deposit,
+      balance,
+      FlatId: flatId,
+      UserId: userId,
+      UnitId: unitId,
     },
     { returning: true, where: { id: req.params.tenantId } },
   );
@@ -98,15 +105,17 @@ router.put('/:tenantId', auth, attachCurrentUser, async (req, res) => {
 });
 
 // Support UI edit interface
-router.put('/ui/:tenantId', async (req, res) => {
+router.put('/ui/:tenantId', auth, attachCurrentUser, async (req, res) => {
+  console.log('PUT /ui/:tenantId  request made by user: ', req.currentUser.name);
+
   const {
-    name, email, msisdn, rent, garbage, water, penalty, status, unitId, userId,
+    name, email, msisdn, rent, garbage, water, penalty, receiptAmount, status, unitId, userId,
   } = req.body;
   const { tenantId } = req.params;
 
   await models.Tenant.update(
     {
-      rent, garbage, water, penalty, status,
+      rent, garbage, water, penalty, receiptAmount, status,
     },
     { returning: true, where: { id: tenantId } },
   );
@@ -127,7 +136,8 @@ router.put('/ui/:tenantId', async (req, res) => {
   return res.json({ message: 'update successful' });
 });
 
-router.post('/ui/unit/assign', async (req, res) => {
+router.post('/ui/unit/assign', auth, attachCurrentUser, async (req, res) => {
+  console.log('POST /ui/unit/assign request made by user: ', req.currentUser.name);
   const { unitId, tenantId } = req.body;
   await addTenantToUnit(unitId, tenantId);
 

@@ -177,4 +177,60 @@ describe('Billing', () => {
       assert.equal(dbStatement[1].outdated, false);
     });
   });
+
+  describe('GET /billing', () => {
+    it('should get all past invoices when provided flatId', async () => {
+      // given
+      const flat = await aFlatExistsWith({ name: 'magondu flat' });
+      const user = await aUserExistsWith({ name: 'sam', email: 'admin@flatspad.com' });
+      const tenant = await aTenantExistsWith({ FlatId: flat.id, UserId: user.id });
+      const unit = await aUnitExistsWith({ name: 'unit 1', FlatId: flat.id, TenantId: tenant.id });
+      const invoice = await anInvoiceExistsWith({
+        rent: 13000, water: 300, penalty: 0, garbage: 100, TenantId: tenant.id, UnitId: unit.id,
+      });
+
+      // create second tenant
+      const tenant2 = await aTenantExistsWith({ FlatId: flat.id, UserId: user.id });
+      const unit2 = await aUnitExistsWith({ name: 'unit 2', FlatId: flat.id, TenantId: tenant2.id });
+      const invoice2 = await anInvoiceExistsWith({
+        rent: 12500, water: 0, penalty: 0, garbage: 0, TenantId: tenant2.id, UnitId: unit2.id,
+      });
+
+      // expect
+      const resp = await request.get(`/billing/invoices?flatId=${flat.id}`).set('Authorization', `Bearer ${token}`).expect(200);
+
+      // when
+      resp.body.should.be.a('array');
+      resp.body.length.should.be.eql(2);
+      assert.equal(resp.body[0].rent, invoice.rent);
+      assert.equal(resp.body[1].rent, invoice2.rent);
+    });
+
+    it('should get all past receipts when provided flatId', async () => {
+      // given
+      const flat = await aFlatExistsWith({ name: 'magondu flat' });
+      const user = await aUserExistsWith({ name: 'sam', email: 'admin@flatspad.com' });
+      const tenant = await aTenantExistsWith({ FlatId: flat.id, UserId: user.id });
+      const unit = await aUnitExistsWith({ name: 'unit 1', FlatId: flat.id, TenantId: tenant.id });
+      const receipt = await aReceiptExistsWith({
+        amount: 13900, TenantId: tenant.id, UnitId: unit.id,
+      });
+
+      // create second tenant
+      const tenant2 = await aTenantExistsWith({ FlatId: flat.id, UserId: user.id });
+      const unit2 = await aUnitExistsWith({ name: 'unit 2', FlatId: flat.id, TenantId: tenant2.id });
+      const receipt2 = await aReceiptExistsWith({
+        rent: 12600, TenantId: tenant2.id, UnitId: unit2.id,
+      });
+
+      // expect
+      const resp = await request.get(`/billing/receipts?flatId=${flat.id}`).set('Authorization', `Bearer ${token}`).expect(200);
+
+      // when
+      resp.body.should.be.a('array');
+      resp.body.length.should.be.eql(2);
+      assert.equal(resp.body[0].amount, receipt.amount);
+      assert.equal(resp.body[1].amount, receipt2.amount);
+    });
+  });
 });

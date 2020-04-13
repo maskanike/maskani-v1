@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     water: DataTypes.INTEGER,
     garbage: DataTypes.INTEGER,
     penalty: DataTypes.INTEGER,
+    receiptAmount: DataTypes.INTEGER,
     status: DataTypes.ENUM('unchanged', 'changed', 'left'),
   }, {});
   Tenant.associate = (models) => {
