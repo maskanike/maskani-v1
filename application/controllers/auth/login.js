@@ -10,11 +10,10 @@ async function Login(email, password) {
     return { error: 'User not found' };
   }
   const correctPassword = await argon2.verify(userRecord.password, password);
-  logError(`Log in failed: user ${email} password incorrect`);
   if (!correctPassword) {
+    logError(`Log in failed: user ${email} password incorrect`);
     return { error: 'Incorrect password' };
   }
-
 
   return {
     user: {
