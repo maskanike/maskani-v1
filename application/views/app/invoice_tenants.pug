@@ -385,4 +385,8 @@ block appMain
               th(scope='col', class='tContacts') Contacts 
               th(scope='col', class='tFinancials') Financials
               th(scope='col', class='tDate') Date
-          tbody#pastInvoicesTable     
+          tbody#pastInvoicesTable
+    content#noDataNotice
+      .page_wrapper.container-fluid
+      .container
+        h4.text-center To see historical data, select month (or year) to fetch the data 

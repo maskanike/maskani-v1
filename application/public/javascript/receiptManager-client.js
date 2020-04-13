@@ -427,6 +427,7 @@ function getSelectedYear() {
 function buildPastReceiptView(receipts) {
   $('.nav-tabs li.nav-item a[href="#main_sent"]').tab('show');
   $('#pastReceiptsTable').empty();
+  $('#noDataNotice').empty();
 
   if (receipts != '') {
     $.each(receipts, (key, receipt) => {
@@ -447,6 +448,15 @@ function buildPastReceiptView(receipts) {
       }
     });
   }
+}
+
+
+function showHistoricalDataOnTabSelect(){
+  $('#tabs').tabs({
+    select: function(event, ui){
+      console.log('in main sent');
+    }
+  });
 }
 
 var helpers = {

@@ -440,6 +440,7 @@ function getSelectedYear() {
 function buildPastInvoiceView(invoices) {
   $('.nav-tabs li.nav-item a[href="#main_sent"]').tab('show');
   $('#pastInvoicesTable').empty();
+  $('#noDataNotice').empty();
 
   if (invoices != '') {
     $.each(invoices, (key, invoice) => {

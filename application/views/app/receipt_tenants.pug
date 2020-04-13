@@ -49,12 +49,12 @@ block appMain
   .main_head
     ul.nav.nav-tabs(id="receiptTab" role="tablist")
       li.nav-item
-        a.nav-link.active(href='#main_in' data-toggle="tab" role="tab" id="allreceipttab" aria-controls="all" aria-selected="true") This Month
+        a.nav-link.active(href='#main_receipt' data-toggle="tab" role="tab" id="allreceipttab" aria-controls="all" aria-selected="true") This Month
       |       
       li.nav-item
         a.nav-link(href='#main_sent' data-toggle="tab" role="tab" id="sentreceipts" aria-controls="sent" aria-selected="false") Sent Receipts
   .tab-content
-    .main_in.tab-pane.active(role="tabpanel" aria-labelledby="all-tab" id="main_in")
+    .main_receipt.tab-pane.active(role="tabpanel" aria-labelledby="all-tab" id="main_receipt")
       .tWrapper1.p-0
         table.table.table-hover.t-1
           thead
@@ -270,4 +270,8 @@ block appMain
               th(scope='col', class='tContacts') Contacts 
               th(scope='col', class='tFinancials') Financials
               th(scope='col', class='tDate') Date
-          tbody#pastReceiptsTable     
+          tbody#pastReceiptsTable
+    content#noDataNotice
+      .page_wrapper.container-fluid
+      .container
+        h4.text-center To see historical data, select month (or year) to fetch the data
