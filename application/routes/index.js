@@ -70,8 +70,13 @@ router.get('/app/onboarding', (req, res) => {
 });
 
 /* GET Invoicing Index */
-router.get('/app/invoice', (req, res) => {
+router.get('/app/invoices', (req, res) => {
   res.render('app/invoice_tenants', { title: 'Invoice Tenants', activePage: 'invoice_tenants' });
+});
+
+/* GET Receipting Index */
+router.get('/app/receipts', (req, res) => {
+  res.render('app/receipt_tenants', { title: 'Receipt Tenants', activePage: 'receipt_tenants' });
 });
 
 /* GET Manage Tenants Index */

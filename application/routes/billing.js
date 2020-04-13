@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 });
 
 // TODO out in auth 'auth, attachCurrentUser;'
-router.get('/invoices', async (req, res) => {
+router.get('/invoices', auth, attachCurrentUser, async (req, res) => {
   const today = moment();
   const date = req.query.month || today.format('YYYY-MM');
   const initDate = moment(date).format();
@@ -49,7 +49,6 @@ router.get('/invoices', async (req, res) => {
   });
   return res.send(resp);
 });
-
 
 router.post('/invoices', auth, attachCurrentUser, async (req, res) => {
   const {
@@ -128,7 +127,7 @@ router.post('/invoices', auth, attachCurrentUser, async (req, res) => {
   return res.status(400).send('An unknown error occurred');
 });
 
-router.get('/receipts', async (req, res) => {
+router.get('/receipts', auth, attachCurrentUser, async (req, res) => {
   const today = moment();
   const date = req.query.month || today.format('YYYY-MM');
   const initDate = moment(date).format();

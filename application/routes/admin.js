@@ -69,11 +69,12 @@ router.get('/unit', auth, attachCurrentUser, async (req, res) => {
       include: [
         {
           model: models.Tenant,
-          include: [models.User, models.Invoice],
+          include: [models.User, models.Invoice, models.Receipt],
         }],
       order: [
         ['name', 'DESC'],
         [models.Tenant, models.Invoice, 'createdAt', 'desc'],
+        [models.Tenant, models.Receipt, 'createdAt', 'desc'],
       ],
     });
 

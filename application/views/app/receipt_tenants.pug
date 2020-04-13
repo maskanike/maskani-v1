@@ -1,0 +1,273 @@
+extends ../app/layout_app
+
+block vars
+  - var bodyClass = 'dashboard receipt-index';
+  //- - var activeClass = 'active';
+
+block menu
+  include ../menus/logged_in.pug
+ 
+block appSidebar
+  // p Receipt Tenants
+
+block appMain
+  script(src="https://momentjs.com/downloads/moment.min.js")
+  script(src='/javascript/receiptManager-client.js')
+  h1.main_title Confirm Tenant's Payments
+  ul.list-inline.dropA
+    li.list-inline-item
+        select#year.form-control
+          option(value=2019)  2019
+          option(value=2020)  2020
+
+    li.list-inline-item
+        select#months.form-control
+          option(value='01')  January
+          option(value='02')  February
+          option(value='03')  March
+          option(value='04')  April
+          option(value='05')  May
+          option(value='06')  June
+          option(value='07')  July
+          option(value='08')  August
+          option(value='09')  September
+          option(value='10')  October
+          option(value='11')  November
+          option(value='12')  December
+
+    li.list-inline-item.propertyDrop
+      .dropdown#defaultFlat
+        //- button(class="btn btn-light dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Hurlingham B Flats
+        div(class="dropdown-menu", aria-labelledby="dropdownMenuButton")#flats
+          a(class="dropdown-item", href="#nogo") + Add Another Property
+
+    // li.list-inline-item.normalButton.far-right
+        button(class="btn btn-primary", type="button" ) + Do Something
+    button#addFlat(class="btn btn-primary", type="button" data-toggle="modal" data-target="#uAddFlat" style="background:blue;visibility:hidden;") Add Flat
+
+
+  .main_head
+    ul.nav.nav-tabs(id="receiptTab" role="tablist")
+      li.nav-item
+        a.nav-link.active(href='#main_in' data-toggle="tab" role="tab" id="allreceipttab" aria-controls="all" aria-selected="true") This Month
+      |       
+      li.nav-item
+        a.nav-link(href='#main_sent' data-toggle="tab" role="tab" id="sentreceipts" aria-controls="sent" aria-selected="false") Sent Receipts
+  .tab-content
+    .main_in.tab-pane.active(role="tabpanel" aria-labelledby="all-tab" id="main_in")
+      .tWrapper1.p-0
+        table.table.table-hover.t-1
+          thead
+            tr
+              //- th(scope='col', class='tSelect') 
+              th(scope='col', class='tUnit') Unit
+              th(scope='col', class='tName') Name
+              th(scope='col', class='tContacts') Contacts
+              th(scope='col', class='tFinancials') Financials
+              //- th(scope='col', class='t') Receipt Status          
+              th(scope='col', class='t') Last Receipt Sent          
+              th(scope='col', class='t') Action
+          tbody#unitTable         
+
+      figure.mainActions.text-center.p-5
+        button(class='btn btn-lg btn-success' data-toggle='modal', data-target='#uAddUnit') Add Unit
+        br
+        
+        .modalGroup
+          #uAllTenants.modal(data-backdrop="static" data-keyboard="false")
+            .modal-dialog
+            .modal-dialog
+              .modal-content
+                // Modal Header
+                .modal-header
+                  h4.modal-title Edit Tenant Details
+                  |         
+                  button.close(type='button', data-dismiss='modal') &times;
+                // Modal body
+                .modal-body
+
+                  .formWrapper
+                    form.formB.text-left
+                      p
+                        strong Personal Details                  
+                      .form-row
+                        .form-group.col-md-6
+                          label(for='inputName') Full Name
+                          |       
+                          input#inputName.form-control(type='text', placeholder='Full Name', required)
+                        |     
+                        .form-group.col-md-6
+                          label(for='inputEmail') Email Address
+                          |       
+                          input#inputEmail.form-control(type='email', placeholder='Email Address')
+                      |   
+                      .form-row
+                        .form-group.col-md-6
+                          label(for='inputPhone') Phone Number
+                          |       
+                          input#inputPhone.form-control(type='text', placeholder='Phone Number', required)
+                        |     
+                        .form-group.col-md-6
+                          label(for='inputDate') Date Joined
+                          |       
+                          input#inputDate.form-control(type='text', placeholder='5 August, 2019', readonly)
+
+                      p
+                        strong Financials
+                      .form-row
+                        .form-group.col-md-6
+                          label(for='inputAmount') Amount Paid
+                          .input-group
+                            .input-group-prepend
+                              .input-group-text#basic-addon1 KES
+                            |     
+                            input#inputAmount.form-control(type='text', placeholder='000', required)
+                      p
+                        strong Status    
+
+                      .form-row    
+                        .form-group.col-md-6 
+                          label(for='inputState') Tenancy Status
+                          select#inputStatus.form-control
+                            option(selected='', value='unchanged') Unchanged 
+                            |        
+                            option(value='left') Tenant moved out
+                            option(value='changed') Change House number
+
+                        .form-group.col-md-6 
+                          label(for='inputState') House Number
+                          select#inputUnit.form-control(disabled)
+                // Modal footer
+                .modal-footer
+                  p 
+                  button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                  button.btn.btn-success(type='button', onClick='submitEditTenantForm()') Save
+          
+          #uAddTenant.modal(data-backdrop="static" data-keyboard="false")
+            .modal-dialog
+              .modal-content
+                // Modal Header
+                .modal-header
+                  h4.modal-title Add Tenant
+                  |         
+                  button.close(type='button', data-dismiss='modal') &times;
+                // Modal body
+                .modal-body
+                .tabbable
+                  ul.nav.nav-tabs
+                    li.nav-item.active
+                      a.nav-link.active(href='#tab1' data-toggle='tab') Select Existing 
+                    |       
+                    li.nav-item
+                      a.nav-link(href='#tab2' data-toggle='tab') Create New
+                  .tab-content
+                      #tab1.tab-pane.active
+                        .formWrapper
+                          form.formB.text-left
+                            p
+                              strong                  
+                            .form-row
+                              .form-group.col-md-12  
+                                label(for='inputTenantWithoutUnit') Tenant Name / Email Address
+                                select#tenantsWithoutUnits.form-control
+                                  option Tenant 1
+                                  option Tenant 2
+                        // Modal footer
+                        .modal-footer
+                          button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                          button.btn.btn-success(type='button', onClick='submitAssignTenantToUnitForm()') Save
+                      #tab2.tab-pane
+                        .formWrapper
+                          form.formB.text-left
+                            p
+                              strong Personal Details                  
+                            .form-row
+                              .form-group.col-md-6
+                                label(for='newTenantName') Full Name
+                                |       
+                                input#newTenantName.form-control(type='text', placeholder='Full Name', required)
+                              |     
+                              .form-group.col-md-6
+                                label(for='newTenantEmail') Email Address
+                                |       
+                                input#newTenantEmail.form-control(type='email', placeholder='Email Address')
+                            |   
+                            .form-row
+                              .form-group.col-md-6
+                                label(for='newTenantPhone') Phone Number
+                                |       
+                                input#newTenantPhone.form-control(type='text', placeholder='Phone Number', required)
+                              |     
+                            p
+                              strong Financials
+                            .form-row
+                              .form-group.col-md-6
+                                label(for='newTenantAmount') Amount
+                                .input-group
+                                  .input-group-prepend
+                                    .input-group-text#basic-addon1 KES
+                                  |     
+                                  input#newTenantAmount.form-control(type='text', placeholder='000', required)                  
+                        // Modal footer
+                        .modal-footer
+                          p 
+                          button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                          button.btn.btn-success(type='button', onClick='submitCreateNewTenantForUnitForm()') Save
+
+          #uAddUnit.modal(data-backdrop="static" data-keyboard="false")
+            .modal-dialog
+              .modal-content
+                // Modal Header
+                .modal-header
+                  h4.modal-title Add Unit
+                  |         
+                  button.close(type='button', data-dismiss='modal') &times;
+                // Modal body
+                .modal-body
+                        .formWrapper
+                          form.formB.text-left
+                            .form-row
+                              .form-group.col-md-12
+                                label(for='newUnitName') Unit Name
+                                |       
+                                input#newUnitName.form-control(type='text', placeholder='Name', required)
+                        // Modal footer
+                        .modal-footer
+                          p 
+                          button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                          button.btn.btn-success(type='button', onClick='createUnit()') Save
+
+          #uAddFlat.modal(data-backdrop="static" data-keyboard="false")
+            .modal-dialog
+              .modal-content
+                // Modal Header
+                .modal-header
+                  h4.modal-title Add Flat
+                  |         
+                  button.close(type='button', data-dismiss='modal') &times;
+                // Modal body
+                .modal-body
+                        .formWrapper
+                          form.formB.text-left
+                            .form-row
+                              .form-group.col-md-12
+                                label(for='newFlatName') Flat Name
+                                |       
+                                input#newFlatName.form-control(type='text', placeholder='Name', required)
+                        // Modal footer
+                        .modal-footer
+                          p 
+                          button.btn.btn-link(type='button', data-dismiss='modal',) Cancel
+                          button.btn.btn-success(type='button', onClick='createFlat()') Save
+
+    .main_sent.tab-pane(role="tabpanel" aria-labelledby="sent-tab" id="main_sent")
+      .tWrapper1.p-0
+        table.table.table-hover.t-1
+          thead
+            tr
+              th(scope='col', class='tUnit') Unit
+              th(scope='col', class='tName') Name
+              th(scope='col', class='tContacts') Contacts 
+              th(scope='col', class='tFinancials') Financials
+              th(scope='col', class='tDate') Date
+          tbody#pastReceiptsTable     

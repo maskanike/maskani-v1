@@ -77,7 +77,7 @@ function sendReceiptEmail(emailContent) {
   const html = `${EMAIL_HEADER
   }<p style="margin-bottom: 25px;">Dear ${emailContent.name},</p>`
   + `<p style="margin-bottom: 25px;">Thank you for being a tenant at <b> ${emailContent.flat} </b> unit  <b> ${emailContent.unit}</b>. `
-  + `This is a payment receipt for payment made on <b>${emailContent.day} / ${emailContent.month} / ${emailContent.year}.<b>`
+  + `We have received your rental payment made on <b>${emailContent.day} / ${emailContent.month} / ${emailContent.year}.<b>`
   + '<p style="margin-bottom: 25px;"></p>'
   + '<ul class="list-group list-group-flush"></ul>'
   + `<li class="list-group-item">Amount: <a style="color: #28AFB0; word-wrap: break-word;"> ${emailContent.amount} </a></li>`

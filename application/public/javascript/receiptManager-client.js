@@ -62,29 +62,28 @@ function buildUnitTable(flatId) {
     if (data != '') {
       $.each(data, (k, v) => {
         if (v.Tenant) {
-          const lastInvoiceDetails = getLastInvoiceDate(v.Tenant.Invoices);
-          let invoiceString;
+          const lastReceiptDetails = getLastReceiptDate(v.Tenant.Receipts);
+          let receiptString;
           let rowFormat = 'table-warning';
-          if (lastInvoiceDetails) {
-            invoiceString = `<p> Date: ${lastInvoiceDetails.date}</p><p> Total: ${lastInvoiceDetails.amount}</p>`;
-            if (helpers.checkIfInvoiceSentThisMonth(lastInvoiceDetails.date)) {
+          if (lastReceiptDetails) {
+            receiptString = `<p> Date: ${lastReceiptDetails.date}</p><p> Total: ${lastReceiptDetails.amount}</p>`;
+            if (helpers.checkIfReceiptSentThisMonth(lastReceiptDetails.date)) {
               rowFormat = 'table-success';
             }
           } else {
-            invoiceString = '-';
+            receiptString = '-';
           }
 
           $('#unitTable').append(
             `<tr class="${rowFormat} id="${v.id}"><form class="form1"></form><th scope="row">${v.name}</th><td data-id="tenantName">${v.Tenant.User.name}</td>`
             + `<td><p>${v.Tenant.User.msisdn}</p><p>${v.Tenant.User.email}</p><p> <a data-toggle="modal" data-name="${v.Tenant.User.name}" data-email="${v.Tenant.User.email}" `
-            + `data-msisdn="${v.Tenant.User.msisdn}" data-rent="${v.Tenant.rent}" data-garbage="${v.Tenant.garbage}"`
-            + `data-water="${v.Tenant.water}" data-penalty="${v.Tenant.penalty}" data-id="${v.id
+            + `data-msisdn="${v.Tenant.User.msisdn}" data-amount="${v.Tenant.receiptAmount}" data-id="${v.id
             }" data-tenant="${v.Tenant.id}" data-user="${v.Tenant.User.id}"`
             + 'data-target="#uAllTenants" href="#nogo">Edit </a></p></td>'
-            + `<td> <p>Rent: KES ${v.Tenant.rent}</p><p>Garbage: KES ${v.Tenant.garbage}</p><p>Water: KES ${v.Tenant.water}</p><p>Penalty: KES ${v.Tenant.penalty}</p></td>`
-            + `<td>${invoiceString}</td>`
+            + `<td> <p>Amount: KES ${v.Tenant.receiptAmount}</p></td>`
+            + `<td>${receiptString}</td>`
             + '<td><button class="btn btn-block btn-primary"'
-            + ` onclick="sendInvoice(${v.Tenant.id},${v.Tenant.rent},${v.Tenant.water},${v.Tenant.garbage},${v.Tenant.penalty})">Send Invoice</button></td></tr>)`,
+            + ` onclick="sendReceipt(${v.Tenant.id},${v.Tenant.receiptAmount})">Send Receipt</button></td></tr>)`,
           );
         } else {
           $('#unitTable').append(
@@ -99,9 +98,9 @@ function buildUnitTable(flatId) {
   });
 }
 
-function sendInvoice(tenantId, rent, water, garbage, penalty) {
-  invoiceData = {
-    tenantId, rent, water, garbage, penalty,
+function sendReceipt(tenantId, amount) {
+  receiptData = {
+    tenantId, amount,
   };
   const jwt = localStorage.getItem('token');
 
@@ -109,23 +108,23 @@ function sendInvoice(tenantId, rent, water, garbage, penalty) {
     beforeSend(xhr) {
       xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
     },
-    url: '/billing/invoices',
+    url: '/billing/receipts',
     type: 'POST',
     dataType: 'json',
     contentType: 'application/json',
-    data: JSON.stringify(invoiceData),
+    data: JSON.stringify(receiptData),
   });
 
   request.done((resp) => {
-    console.log('/billing/invoices response: ', resp);
-    alert('Invoice sent');
-    window.location.href = '/app/invoices';
+    console.log('/billing/receipts response: ', resp);
+    alert('Receipt sent');
+    window.location.href = '/app/receipts';
 
     // TODO remove unit from table list. Or change row color
   });
 
   request.fail((jqXHR, textStatus) => {
-    console.log('/billing/invoice error: ', textStatus);
+    console.log('/billing/receipt error: ', textStatus);
   });
 }
 
@@ -134,18 +133,12 @@ function populateEditTenantModal() {
     const name = $(e.relatedTarget).data('name');
     const email = $(e.relatedTarget).data('email');
     const phone = $(e.relatedTarget).data('msisdn');
-    const rent = $(e.relatedTarget).data('rent');
-    const garbage = $(e.relatedTarget).data('garbage');
-    const water = $(e.relatedTarget).data('water');
-    const penalty = $(e.relatedTarget).data('penalty');
+    const amount = $(e.relatedTarget).data('amount');
 
     $('#inputName').val(name);
     $('#inputEmail').val(email);
     $('#inputPhone').val(phone);
-    $('#inputRent').val(rent);
-    $('#inputGarbage').val(garbage);
-    $('#inputWater').val(water);
-    $('#inputPenalty').val(penalty);
+    $('#inputAmount').val(amount);
 
     // These values cannot be changed by opening the modal so they can be initalized when the modal is open.
     tenantDataToEdit.tenantId = $(e.relatedTarget).data('tenant');
@@ -168,10 +161,7 @@ function submitEditTenantForm() {
 
   tenantDataToEdit.name = $('#inputName').val();
   tenantDataToEdit.email = $('#inputEmail').val();
-  tenantDataToEdit.rent = $('#inputRent').val() || 0;
-  tenantDataToEdit.garbage = $('#inputGarbage').val() || 0;
-  tenantDataToEdit.water = $('#inputWater').val() || 0;
-  tenantDataToEdit.penalty = $('#inputPenalty').val() || 0;
+  tenantDataToEdit.receiptAmount = $('#inputAmount').val() || 0;
   tenantDataToEdit.status = $('#inputStatus').val();
   tenantDataToEdit.msisdn = $('#inputPhone').val();
   tenantDataToEdit.unitId = $('#inputUnit').val();
@@ -187,7 +177,7 @@ function submitEditTenantForm() {
     contentType: 'application/json',
     data: JSON.stringify(tenantDataToEdit),
     success() {
-      window.location.href = '/app/invoices';
+      window.location.href = '/app/receipts';
     },
     error(error) {
       console.log(error.responseText);
@@ -233,7 +223,7 @@ function submitAssignTenantToUnitForm() {
     contentType: 'application/json',
     data: JSON.stringify({ tenantId, unitId: unitToAddTenant }),
     success() {
-      window.location.href = '/app/invoices';
+      window.location.href = '/app/receipts';
     },
     error(error) {
       console.log(error.responseText);
@@ -258,10 +248,7 @@ function submitCreateNewTenantForUnitForm() {
   newTenant.name = $('#newTenantName').val();
   newTenant.email = $('#newTenantEmail').val();
   newTenant.msisdn = $('#newTenantPhone').val();
-  newTenant.rent = $('#newTenantRent').val() || 0;
-  newTenant.garbage = $('#newTenantGarbage').val() || 0;
-  newTenant.water = $('#newTenantWater').val() || 0;
-  newTenant.penalty = $('#newTenantPenalty').val() || 0;
+  newTenant.receiptAmount = $('#newTenantAmount').val() || 0;
   newTenant.unitId = unitToAddTenant;
   newTenant.flatId = currentFlatId;
 
@@ -277,7 +264,7 @@ function submitCreateNewTenantForUnitForm() {
       xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
     },
     success() {
-      window.location.href = '/app/invoices';
+      window.location.href = '/app/receipts';
     },
     error(error) {
       console.log(error.responseText);
@@ -315,7 +302,7 @@ function createUnit() {
     request.done((resp) => {
       console.log('/admin/unit response: ', resp);
       alert('Unit created');
-      window.location.href = '/app/invoices';
+      window.location.href = '/app/receipts';
     });
 
     request.fail((jqXHR, textStatus) => {
@@ -347,7 +334,7 @@ function createFlat() {
     request.done((resp) => {
       console.log('/admin/flat response: ', resp);
       alert('Flat created');
-      window.location.href = '/app/invoices';
+      window.location.href = '/app/receipts';
     });
 
     request.fail((jqXHR, textStatus) => {
@@ -379,11 +366,11 @@ function setSelectedYearInDropDown() {
   $(`#year option[value=${selectedYear}]`).prop('selected', true);
 }
 
-function getLastInvoiceDate(invoices) {
-  if (invoices && invoices[0]) {
-    const lastInvoice = invoices[0];
-    const date = moment(lastInvoice.createdAt).format('YYYY-MM-DD');
-    const amount = lastInvoice.rent + lastInvoice.water + lastInvoice.garbage + lastInvoice.penalty;
+function getLastReceiptDate(receipts) {
+  if (receipts && receipts[0]) {
+    const lastReceipt = receipts[0];
+    const date = moment(lastReceipt.createdAt).format('YYYY-MM-DD');
+    const amount = lastReceipt.amount;
     return { date, amount };
   }
   return null;
@@ -399,16 +386,16 @@ function getSelectedMonth() {
       beforeSend(xhr) {
         xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
       },
-      url: `/billing/invoices?flatId=${currentFlatId}&month=${date}`,
+      url: `/billing/receipts?flatId=${currentFlatId}&month=${date}`,
       dataType: 'json',
     });
 
     request.done((resp) => {
-      buildPastInvoiceView(resp);
+      buildPastReceiptView(resp);
     });
 
     request.fail((jqXHR, textStatus) => {
-      console.log('/billing/invoices/ error: ', textStatus);
+      console.log('/billing/receipts/ error: ', textStatus);
     });
   });
 }
@@ -423,44 +410,39 @@ function getSelectedYear() {
       beforeSend(xhr) {
         xhr.setRequestHeader('Authorization', `Bearer ${jwt}`);
       },
-      url: `/billing/invoices?flatId=${currentFlatId}&month=${date}`,
+      url: `/billing/receipts?flatId=${currentFlatId}&month=${date}`,
       dataType: 'json',
     });
 
     request.done((resp) => {
-      buildPastInvoiceView(resp);
+      buildPastReceiptView(resp);
     });
 
     request.fail((jqXHR, textStatus) => {
-      console.log('/billing/invoice/ error: ', textStatus);
+      console.log('/billing/receipt/ error: ', textStatus);
     });
   });
 }
 
-function buildPastInvoiceView(invoices) {
+function buildPastReceiptView(receipts) {
   $('.nav-tabs li.nav-item a[href="#main_sent"]').tab('show');
-  $('#pastInvoicesTable').empty();
+  $('#pastReceiptsTable').empty();
 
-  if (invoices != '') {
-    $.each(invoices, (key, invoice) => {
-      if (invoice.createdAt) {
-        const totalRent = invoice.rent + invoice.garbage + invoice.water + invoice.penalty;
-        $('#pastInvoicesTable').append(
-          `<tr><td>${invoice.Unit.name}</td>`
-          + `<td>${invoice.Tenant.User.name}</td>`
-          + `<td><p>${invoice.Tenant.User.email}</p><p>${invoice.Tenant.User.msisdn}</p></td>`
-          + `<td><p>Rent: KES ${invoice.rent}</p>`
-            + `<p>Garbage: KES ${invoice.garbage}</p>`
-            + `<p>Water: KES ${invoice.water}</p>`
-            + `<p>Penalty: KES ${invoice.penalty}</p>`
-            + `<p><b>TOTAL: KES ${totalRent}<b></p>`
+  if (receipts != '') {
+    $.each(receipts, (key, receipt) => {
+      if (receipt.createdAt) {
+        $('#pastReceiptsTable').append(
+          `<tr><td>${receipt.Unit.name}</td>`
+          + `<td>${receipt.Tenant.User.name}</td>`
+          + `<td><p>${receipt.Tenant.User.email}</p><p>${receipt.Tenant.User.msisdn}</p></td>`
+          + `<p><b>TOTAL: KES ${receipt.amount}<b></p>`
           + '</td>'
-          + `<td>${invoice.createdAt}</td></tr>`,
+          + `<td>${receipt.createdAt}</td></tr>`,
         );
       } else {
-        $('#pastInvoicesTable').append(
-          `<tr><td>${invoice.Unit.name}</td>`
-          + '<td colspan="4">No Invoice sent</td></tr>',
+        $('#pastReceiptsTable').append(
+          `<tr><td>${receipt.Unit.name}</td>`
+          + '<td colspan="4">No Receipt sent</td></tr>',
         );
       }
     });
@@ -477,13 +459,13 @@ var helpers = {
     }
   },
 
-  checkIfInvoiceSentThisMonth(date) {
+  checkIfReceiptSentThisMonth(date) {
     if (!date) {
       return false;
     }
     const today = moment();
-    const invoiceDate = moment(date);
-    if ((today.month() === invoiceDate.month()) && (today.year() === invoiceDate.year())) {
+    const receiptDate = moment(date);
+    if ((today.month() === receiptDate.month()) && (today.year() === receiptDate.year())) {
       return true;
     }
     return false;
