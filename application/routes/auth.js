@@ -62,8 +62,8 @@ router.post('/login', async (req, res) => {
 router.post(
   '/signup',
   trimRequest.all,
-  validate.register,
-  controller.register,
+  validate.signup,
+  controller.signup,
 );
 //   const {
 //     email, name, msisdn, password,

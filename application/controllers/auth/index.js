@@ -1,10 +1,12 @@
 import { User, UserAccess } from '../../models';
 
 const jwt = require('jsonwebtoken');
+const uuid = require('uuid');
 const { addHours } = require('date-fns');
 const { matchedData } = require('express-validator');
 const auth = require('../../middleware/auth');
 const utils = require('../../middleware/utils');
+const emailer = require('../../middleware/emailer');
 
 const HOURS_TO_BLOCK = 2;
 const LOGIN_ATTEMPTS = 5;
@@ -141,6 +143,41 @@ const mobileNumberNotValid = async () => new Promise((resolve) => {
   resolve(utils.buildErrObject(400, 'MSISDN_INVALID'));
 });
 
+/**
+ * Signs up a new user in database
+ * @param {Object} req - request object
+ */
+const signupUser = async (req) => new Promise((resolve, reject) => {
+  const user = new User({
+    name: req.name,
+    email: req.email,
+    msisdn: req.msisdn,
+    password: req.password,
+    verification: uuid.v4(),
+  });
+  user.save((err, item) => {
+    if (err) {
+      reject(utils.buildErrObject(422, err.message));
+    }
+    resolve(item);
+  });
+});
+
+/**
+ * Builds the registration token
+ * @param {Object} item - user object that contains created id
+ * @param {Object} userInfo - user object
+ */
+const returnSignupToken = (item, userInfo) => {
+  if (process.env.NODE_ENV !== 'production') {
+    userInfo.verification = item.verification; // eslint-disable-line no-param-reassign
+  }
+  const data = {
+    token: generateToken(item.id),
+    user: userInfo,
+  };
+  return data;
+};
 
 /**
  * Saves a new user access and then returns token
@@ -221,10 +258,33 @@ exports.login = async (req, res) => {
     if (!isPasswordMatch) {
       utils.handleError(res, await passwordsDoNotMatch(user));
     } else {
-      // all ok, register access and return token
+      // all ok, signup access and return token
       user.loginAttempts = 0;
       await saveLoginAttemptsToDB(user);
       res.status(200).json(await saveUserAccessAndReturnToken(req, user));
+    }
+  } catch (error) {
+    utils.handleError(res, error);
+  }
+};
+
+/**
+ * Register function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+exports.signup = async (req, res) => {
+  try {
+    // Gets locale from header 'Accept-Language'
+    const locale = req.getLocale();
+    req = matchedData(req); // eslint-disable-line no-param-reassign
+    const doesEmailExists = await emailer.emailExists(req.email);
+    if (!doesEmailExists) {
+      const item = await signupUser(req);
+      const userInfo = setUserInfo(item);
+      const response = returnSignupToken(item, userInfo);
+      emailer.sendRegistrationEmailMessage(locale, item);
+      res.status(201).json(response);
     }
   } catch (error) {
     utils.handleError(res, error);
