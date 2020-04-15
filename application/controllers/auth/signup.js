@@ -3,11 +3,7 @@ import models from '../../models';
 import generateJWT from './generate_token';
 import validateKenyanPhoneNumber from '../utils/validate';
 
-async function SignUp(email, name, msisdn, password1, password2) {
-  if (password1 !== password2) {
-    return { error: 'passwords do not match' };
-  }
-
+async function SignUp(email, name, msisdn, password) {
   const existingRecord = await models.User.findOne({ where: { email } });
   if (existingRecord) {
     return { error: 'email already registered' };
@@ -18,7 +14,7 @@ async function SignUp(email, name, msisdn, password1, password2) {
     return { error: 'Phone number invalid. Kindly check again' };
   }
 
-  const passwordHashed = await argon2.hash(password1);
+  const passwordHashed = await argon2.hash(password);
 
   const userRecord = await models.User.create({
     password: passwordHashed,

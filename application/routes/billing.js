@@ -1,5 +1,5 @@
-import auth from '../middlewares/auth';
-import attachCurrentUser from '../middlewares/attachCurrentUser';
+import auth from '../middleware/auth';
+import attachCurrentUser from '../middleware/attachCurrentUser';
 import models from '../models';
 import logError from '../controllers/utils/error_notify';
 import sendSMS from '../controllers/utils/send_sms';

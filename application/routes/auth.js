@@ -1,8 +1,11 @@
 import Login from '../controllers/auth/login';
-import Signup from '../controllers/auth/signup';
+// import Signup from '../controllers/auth/signup';
 import models from '../models';
 
 const express = require('express');
+const trimRequest = require('trim-request');
+const controller = require('../controllers/auth');
+const validate = require('../controllers/auth/validate');
 
 const router = express.Router();
 
@@ -56,15 +59,21 @@ router.post('/login', async (req, res) => {
   return res.status(200).send(response);
 });
 
-router.post('/signup', async (req, res) => {
-  const {
-    email, name, msisdn, password1, password2,
-  } = req.body;
-  const response = await Signup(email, name, msisdn, password1, password2);
-  if (response.user) {
-    return res.status(201).send(response);
-  }
-  return res.status(400).send(response);
-});
+router.post(
+  '/signup',
+  trimRequest.all,
+  validate.register,
+  controller.register,
+);
+//   const {
+//     email, name, msisdn, password,
+//   } = req.body;
+//   console.log('body: ', req.body);
+//   const response = await Signup(email, name, msisdn, password);
+//   if (response.user) {
+//     return res.status(201).send(response);
+//   }
+//   return res.status(400).send(response);
+// });
 
 module.exports = router;

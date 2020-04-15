@@ -1,6 +1,6 @@
 import models from '../models';
-import auth from '../middlewares/auth';
-import attachCurrentUser from '../middlewares/attachCurrentUser';
+import auth from '../middleware/auth';
+import attachCurrentUser from '../middleware/attachCurrentUser';
 
 const express = require('express');
 
