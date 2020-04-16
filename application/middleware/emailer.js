@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const mg = require('mailgun-js');
-const i18n = require('i18n');
 const { User } = require('../models');
 const { itemAlreadyExists } = require('./utils');
 
@@ -65,15 +64,15 @@ module.exports = {
    */
   async emailExists(email) {
     return new Promise((resolve, reject) => {
-      User.findOne(
-        {
-          email,
-        },
-        (err, item) => {
-          itemAlreadyExists(err, item, reject, 'EMAIL_ALREADY_EXISTS');
+      User.findOne({ where: { email } })
+        .then((item) => {
+          itemAlreadyExists('', item, reject, 'EMAIL_ALREADY_EXISTS');
           resolve(false);
-        },
-      );
+        })
+        .catch((err) => {
+          itemAlreadyExists(err, '', reject, 'EMAIL_ALREADY_EXISTS');
+          resolve(false);
+        });
     });
   },
 
@@ -101,35 +100,23 @@ module.exports = {
 
   /**
    * Sends registration email
-   * @param {string} locale - locale
    * @param {Object} user - user object
    */
-  async sendRegistrationEmailMessage(locale, user) {
-    i18n.setLocale(locale);
-    const subject = i18n('registration.SUBJECT');
-    const htmlMessage = i18n(
-      'registration.MESSAGE',
-      user.name,
-      process.env.FRONTEND_URL,
-      user.verification,
-    );
+  async sendRegistrationEmailMessage(user) {
+    const subject = 'Verify your email at Maskani';
+    const htmlMessage = `<p>Hello ${user.name}.</p> <p>Welcome! To verify your email, please click in this link:</p>`
+      + `<p>${process.env.FRONTEND_URL}/verify/${user.verification}</p> <p>Thank you.</p>`;
     prepareToSendEmail(user, subject, htmlMessage);
   },
 
   /**
    * Sends reset password email
-   * @param {string} locale - locale
    * @param {Object} user - user object
    */
-  async sendResetPasswordEmailMessage(locale, user) {
-    i18n.setLocale(locale);
-    const subject = i18n('forgotPassword.SUBJECT');
-    const htmlMessage = i18n(
-      'forgotPassword.MESSAGE',
-      user.email,
-      process.env.FRONTEND_URL,
-      user.verification,
-    );
+  async sendResetPasswordEmailMessage(user) {
+    const subject = 'Password recovery at Maskani';
+    const htmlMessage = `<p>To recover the password for user: ${user.email}</p> <p>click the following link:</p>`
+        + ` <p>${process.env.FRONTEND_URL}/reset/${user.verification}</p> <p>If this was a mistake, you can ignore this message.</p> <p>Thank you.</p>`;
     prepareToSendEmail(user, subject, htmlMessage);
   },
 };

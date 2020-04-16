@@ -147,21 +147,23 @@ const mobileNumberNotValid = async () => new Promise((resolve) => {
  * Signs up a new user in database
  * @param {Object} req - request object
  */
-const signupUser = async (req) => new Promise((resolve, reject) => {
-  const user = new User({
-    name: req.name,
-    email: req.email,
-    msisdn: req.msisdn,
-    password: req.password,
-    verification: uuid.v4(),
-  });
-  user.save((err, item) => {
-    if (err) {
-      reject(utils.buildErrObject(422, err.message));
-    }
-    resolve(item);
-  });
-});
+const signupUser = async (req) => {
+  try {
+    console.log('signing up user');
+    const user = await User.create({
+      status: 'active',
+      name: req.name,
+      email: req.email,
+      msisdn: req.msisdn,
+      password: req.password,
+      verification: uuid.v4(),
+    });
+    return user;
+  } catch (err) {
+    // reject(utils.buildErrObject(422, err.message));
+  }
+  return 1;
+};
 
 /**
  * Builds the registration token
@@ -275,15 +277,16 @@ exports.login = async (req, res) => {
  */
 exports.signup = async (req, res) => {
   try {
-    // Gets locale from header 'Accept-Language'
-    const locale = req.getLocale();
     req = matchedData(req); // eslint-disable-line no-param-reassign
     const doesEmailExists = await emailer.emailExists(req.email);
+    console.log('does:', doesEmailExists);
+
     if (!doesEmailExists) {
       const item = await signupUser(req);
+      console.log('req:', item);
       const userInfo = setUserInfo(item);
       const response = returnSignupToken(item, userInfo);
-      emailer.sendRegistrationEmailMessage(locale, item);
+      emailer.sendRegistrationEmailMessage(item);
       res.status(201).json(response);
     }
   } catch (error) {

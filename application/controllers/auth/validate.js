@@ -11,7 +11,7 @@ exports.signup = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('email')
+  check('msisdn')
     .exists()
     .withMessage('MISSING')
     .not()
@@ -19,7 +19,7 @@ exports.signup = [
     .withMessage('IS_EMPTY')
     .isMobilePhone()
     .withMessage('MOBILE_NUMBER_IS_NOT_VALID'),
-  check('msisdn')
+  check('email')
     .exists()
     .withMessage('MISSING')
     .not()

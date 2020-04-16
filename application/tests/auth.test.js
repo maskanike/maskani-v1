@@ -2,7 +2,7 @@ import {
   aUserExistsWith, truncateModel, getAllFromModel,
 } from './utils.test';
 
-describe('Auth', () => {
+describe.only('Auth', () => {
   beforeEach(async () => {
     await truncateModel('User');
   });
@@ -20,7 +20,7 @@ describe('Auth', () => {
 
       // expect
       const resp = await request.post('/auth/signup').send(user).set('Authorization', `Bearer ${token}`).expect(201);
-
+      console.log('resp: ', resp.body);
       // when
       resp.body.should.be.a('object');
       assert.equal(resp.body.user.email, user.email);
