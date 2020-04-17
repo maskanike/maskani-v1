@@ -8,7 +8,7 @@ const getTokenFromHeader = (req) => {
 };
 
 export default ejwt({
-  secret: process.env.AUTH_TOKEN,
+  secret: process.env.JWT_SECRET,
   userProperty: 'token',
   getToken: getTokenFromHeader,
 });

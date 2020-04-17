@@ -65,11 +65,10 @@ module.exports = {
   async emailExists(email) {
     return new Promise((resolve, reject) => {
       User.findOne({ where: { email } })
-        .then((item) => {
-          itemAlreadyExists('', item, reject, 'EMAIL_ALREADY_EXISTS');
+        .then((user) => {
+          itemAlreadyExists('', user, reject, 'EMAIL_ALREADY_EXISTS');
           resolve(false);
-        })
-        .catch((err) => {
+        }).catch((err) => {
           itemAlreadyExists(err, '', reject, 'EMAIL_ALREADY_EXISTS');
           resolve(false);
         });
