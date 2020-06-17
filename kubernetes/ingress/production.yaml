@@ -11,18 +11,18 @@ metadata:
 spec:
   tls:
   - hosts:
-    - maskani.co.ke
-    - www.maskani.co.ke
+    - v1.maskani.co.ke
+    - www.v1.maskani.co.ke
     secretName: maskani-tls
   rules:
-    - host: maskani.co.ke
+    - host: v1.maskani.co.ke
       http:
         paths:
         - path: /
           backend:
             serviceName: maskani
             servicePort: 3000
-    - host: www.maskani.co.ke
+    - host: www.v1.maskani.co.ke
       http:
         paths:
         - path: /
