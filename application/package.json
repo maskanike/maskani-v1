@@ -12,14 +12,14 @@
     "test": "yarn lint && export NODE_ENV=test && ./node_modules/.bin/sequelize db:migrate:undo:all && yarn migrate && mocha --require @babel/register 'tests/**/**test.js' --exit"
   },
   "dependencies": {
-    "argon2": "^0.26.1",
+    "argon2": "^0.27.2",
     "bootstrap": "^4.6.1",
     "chai": "^4.3.4",
     "cookie-parser": "^1.4.5",
     "debug": "^4.3.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-jwt": "^6.0.0",
+    "express-jwt": "^6.1.1",
     "http-errors": "^1.7.3",
     "jsonwebtoken": "^8.5.1",
     "mailgun-js": "^0.22.0",
